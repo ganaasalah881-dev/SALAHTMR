@@ -1,0 +1,508 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.ProductionDeliveryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <UserControl.Resources>
+        <Style x:Key="ShapeApproveButton" TargetType="Button" BasedOn="{StaticResource ErpApproveButton}">
+            <Setter Property="Background" Value="#C9A227"/>
+            <Setter Property="Foreground" Value="#2B2200"/>
+            <Setter Property="BorderBrush" Value="#A8871C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#D6B032"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="#E7E1CA"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#CFC8AC"/>
+                                <Setter Property="Foreground" Value="#8A8470"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShapePrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#14532D"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#0F3D22"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="13,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1D5B3A"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="#C7D3CB"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#B2C0B7"/>
+                                <Setter Property="Foreground" Value="#6F7D74"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShapeSecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="BorderBrush" Value="#B8B5A0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#F4F2E8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="#F5F4EE"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- §التصميم المعتمد (production_screens_shape-2): شاشة تسليم الإنتاج — تسجيل الفعلي وتوجيه مخازن التام -->
+    <Border Background="#FDFCF8" BorderBrush="#B8B5A0" BorderThickness="1.5" CornerRadius="6" Margin="10" SnapsToDevicePixels="True">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" MinHeight="260"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ① شريط الرأس الداكن المعتمد (.cmd: #16283C -> #1D3B57) -->
+            <Border Grid.Row="0" BorderBrush="#0F1E2E" BorderThickness="0,0,0,1" Padding="14,9" CornerRadius="5,5,0,0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#16283C" Offset="0"/>
+                        <GradientStop Color="#1D3B57" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="MRPMPS1021" FontFamily="Consolas" FontSize="11"
+                               Foreground="#CCFFFFFF" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <WrapPanel VerticalAlignment="Center">
+                        <TextBlock Text="📤 تسليم الإنتاج — تسجيل الفعلي" FontSize="15" FontWeight="Bold"
+                                   Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Border Background="#24FFFFFF" BorderBrush="#8CC9A227" BorderThickness="1"
+                                CornerRadius="14" Padding="11,3" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="DocNoBadge" Text="تسجيل الفعلي" FontSize="12" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        <Border Background="#FACC15" CornerRadius="12" Padding="11,3" VerticalAlignment="Center">
+                            <TextBlock Text="لمن كانت الخطة؟ ماذا خططنا؟ ماذا أنتجنا؟ كم توقفنا؟ وما المخلفات؟"
+                                       FontSize="11.5" FontWeight="Bold" Foreground="#3B2F00" TextWrapping="Wrap"/>
+                        </Border>
+                    </WrapPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- ② شريط السياق واختيار الأمر (.band.alt: #F4F2E8) -->
+            <Border Grid.Row="1" Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="0,0,0,1" Padding="14,8">
+                <WrapPanel VerticalAlignment="Center">
+                    <Border Background="#EDF3EE" BorderBrush="#CADCCF" BorderThickness="1" CornerRadius="13" Padding="11,3" Margin="0,0,8,2" VerticalAlignment="Center">
+                        <TextBlock x:Name="CustChip" Text="👤 العميل: —" FontSize="11.5" FontWeight="Bold" Foreground="#14532D"/>
+                    </Border>
+                    <Border Background="#FFF7E0" BorderBrush="#E9CE7E" BorderThickness="1" CornerRadius="13" Padding="11,3" Margin="0,0,8,2" VerticalAlignment="Center">
+                        <TextBlock x:Name="PlanChip" Text="📋 الخطة: —" FontSize="11.5" FontWeight="Bold" Foreground="#8A6A00"/>
+                    </Border>
+                    <Border Background="#F3EEFB" BorderBrush="#D6C8EF" BorderThickness="1" CornerRadius="13" Padding="11,3" Margin="0,0,8,2" VerticalAlignment="Center">
+                        <TextBlock x:Name="ShiftChip" Text="⏰ الوردية: —" FontSize="11.5" FontWeight="Bold" Foreground="#6D28D9"/>
+                    </Border>
+
+                    <Border Width="1" Height="22" Background="#D9D4C4" Margin="6,0,10,2" VerticalAlignment="Center"/>
+
+                    <TextBlock Text="اختر الأمر:" FontSize="11.5" FontWeight="SemiBold" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,6,2"/>
+                    <ComboBox x:Name="OrderBox" DisplayMemberPath="Label" SelectionChanged="Order_Changed"
+                              MinWidth="295" Height="28" FontSize="12" Background="White" BorderBrush="#B8B5A0" Margin="0,0,10,2"/>
+
+                    <TextBlock Text="مستند التسليم:" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,2"/>
+                    <ComboBox x:Name="DeliveryBox" DisplayMemberPath="ListLabel" SelectionChanged="Delivery_Changed"
+                              MinWidth="195" Height="28" FontSize="11.5" Background="White" BorderBrush="#B8B5A0" Margin="0,0,8,2"
+                              ToolTip="أوامر تسليم الإنتاج المحفوظة"/>
+
+                    <TextBlock Text="التاريخ:" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,2"/>
+                    <DatePicker x:Name="DeliveryDateBox" Width="116" Height="28" Background="White" Margin="0,0,0,2"/>
+                </WrapPanel>
+            </Border>
+
+            <!-- ③ شريط الحالة ودليل الشاشة الفارغة -->
+            <StackPanel Grid.Row="2">
+                <Border Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="0,0,0,1" Padding="14,6">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBox x:Name="SearchBox" Width="165" Height="26" FontSize="11.5" Padding="6,2"
+                                     BorderBrush="#B8B5A0" ToolTip="بحث برقم الأمر أو العميل أو الخطة أو مستند التسليم"/>
+                            <Button Content="🔍" Style="{StaticResource ShapeSecondaryButton}" Padding="8,3" Margin="4,0,0,0" Click="Search_Click"/>
+                            <Button Content="↺" Style="{StaticResource ShapeSecondaryButton}" Padding="8,3" Margin="4,0,0,0" Click="ClearSearch_Click" ToolTip="إلغاء التصفية"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="●" Foreground="#C9A227" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="StatusLabel" Text="اختر أمر الإنتاج من الأعلى لتسجيل الفعلي أو متابعة أمر التسليم."
+                                       FontSize="12" FontWeight="SemiBold" Foreground="#0A246A" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <Border x:Name="EmptyGuide" Visibility="Collapsed" Background="#FFFDF3" BorderBrush="#E9CE7E"
+                        BorderThickness="1" CornerRadius="4" Margin="14,8,14,0" Padding="12,8">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Left" Content="📝 فتح أمر إنتاج اليوم"
+                                Style="{StaticResource ShapePrimaryButton}" Click="OpenOrders_Click" VerticalAlignment="Center"/>
+                        <TextBlock Text="لا توجد أوامر إنتاج معتمدة قابلة للتسجيل حالياً. أصدر واعتمد أمر اليوم من شاشة «أمر إنتاج اليوم» أولاً ثم عُد لتسجيل الفعلي وتسليم الإنتاج."
+                                   FontSize="12" Foreground="#8A6A00" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- ④ الجدول الرئيسي: بنود الأمر — المنتج فعليًا مقابل المخطط + مخزن التام الوجهة -->
+            <DockPanel Grid.Row="3" Margin="12,8,12,6" LastChildFill="True">
+                <Border DockPanel.Dock="Top" Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="1,1,1,0" Padding="12,6">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="العمود الأصفر وحده قابل للكتابة — الباقي ثابت من الخطة"
+                                       FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <TextBlock Text="🏬 المخزن الوجهة الموحد:" FontSize="11" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <ComboBox x:Name="DefaultWarehouseBox" DisplayMemberPath="DisplayName" SelectedValuePath="Id"
+                                      SelectionChanged="DefaultWarehouse_Changed" MinWidth="165" Height="25" FontSize="11.5"
+                                      Background="White" BorderBrush="#B8B5A0"
+                                      ToolTip="يضبط مخزن التام الافتراضي لجميع البنود، ويمكن تخصيص مخزن مختلف لكل بند من الجدول"/>
+                        </StackPanel>
+                        <TextBlock Text="📦 بنود الأمر — المنتج فعليًا مقابل المخطط"
+                                   FontSize="12.5" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Border>
+
+                <DataGrid x:Name="ItemsGrid" MinHeight="260" RowHeight="32" ColumnHeaderHeight="36" FontSize="12.5" AlternationCount="2"
+                          AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                          AlternatingRowBackground="#FBFAF5" Background="#FDFCF8" RowBackground="#FDFCF8"
+                          GridLinesVisibility="None"
+                          BorderBrush="#B8B5A0" BorderThickness="1.5" HeadersVisibility="Column"
+                          PreviewMouseLeftButtonDown="Grid_SingleClickEdit">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
+                            <Setter Property="Padding" Value="8,4"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="BorderBrush" Value="#F0EDE4"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#16283C"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="11.5"/>
+                            <Setter Property="Padding" Value="8,6"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="BorderBrush" Value="#2A4470"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="العميل 👤" Binding="{Binding Customer, Mode=OneWay}" Width="1.2*" MinWidth="130" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#1F2937"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="الصنف من الخطة 🏷️" Binding="{Binding Product, Mode=OneWay}" Width="1.6*" MinWidth="170" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#1F2937"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="المخطط" Binding="{Binding Planned, Mode=OneWay, StringFormat=N0}" Width="95" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="الوحدة 📏" Binding="{Binding Unit, Mode=OneWay}" Width="80" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn x:Name="ActualColumn" Header="المنتج فعليًا ✏️"
+                                            Binding="{Binding Actual, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                            Width="135">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
+                                    <Setter Property="Background" Value="#FFFDF3"/>
+                                    <Setter Property="BorderBrush" Value="#C9A227"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Padding" Value="6,2"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#14532D"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                            <DataGridTextColumn.EditingElementStyle>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="Background" Value="#FFFDF3"/>
+                                    <Setter Property="BorderBrush" Value="#C9A227"/>
+                                </Style>
+                            </DataGridTextColumn.EditingElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Header="الفرق عن المخطط" Width="125" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="DiffBadge" Background="#F1F0EA" CornerRadius="10" Padding="9,2"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock x:Name="DiffText" Text="{Binding Difference, Mode=OneWay}"
+                                                   FontSize="11" FontWeight="Bold" Foreground="#57534E"/>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding DiffState}" Value="match">
+                                            <Setter TargetName="DiffBadge" Property="Background" Value="#DCFCE7"/>
+                                            <Setter TargetName="DiffText" Property="Foreground" Value="#166534"/>
+                                            <Setter TargetName="DiffText" Property="Text" Value="✔ مطابق"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DiffState}" Value="gap">
+                                            <Setter TargetName="DiffBadge" Property="Background" Value="#FEF3C7"/>
+                                            <Setter TargetName="DiffText" Property="Foreground" Value="#92400E"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn x:Name="WarehouseColumn" Header="المخزن الوجهة 🏬" Width="1.15*" MinWidth="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding FinishedWarehouses, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              SelectedValuePath="Id" DisplayMemberPath="DisplayName"
+                                              SelectedValue="{Binding WarehouseId, UpdateSourceTrigger=PropertyChanged}"
+                                              Height="25" FontSize="11.5" Background="#FFFDF3" BorderBrush="#C9A227"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+
+            <!-- ⑤ لوحة إدخال الخام والتوقف والمخرجات الثانوية المضغوطة (تظهر عند قابلية التسجيل) -->
+            <StackPanel x:Name="ActualFieldsOuter" Grid.Row="4">
+                <Border BorderBrush="#D9D4C4" BorderThickness="0,1,0,1" Padding="14,8" Background="#FDFCF8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.05*"/>
+                            <ColumnDefinition Width="0.75*"/>
+                            <ColumnDefinition Width="1.35*"/>
+                            <ColumnDefinition Width="1.25*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="الخام المستهلك فعليًا — كجم *" Style="{StaticResource FieldLabel}" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" Margin="0,0,0,3"/>
+                            <TextBox x:Name="RawBox" Height="28" Padding="7,3" FontSize="12.5" FontWeight="Bold"
+                                     Background="#FFFDF3" BorderBrush="#C9A227"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                            <TextBlock Text="التوقف — ساعة" Style="{StaticResource FieldLabel}" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" Margin="0,0,0,3"/>
+                            <TextBox x:Name="DowntimeBox" Height="28" Padding="7,3" FontSize="12.5" Text="0"
+                                     Background="White" BorderBrush="#B8B5A0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                            <TextBlock Text="سبب التوقف — سبب واحد للعملية" Style="{StaticResource FieldLabel}" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" Margin="0,0,0,3"/>
+                            <TextBox x:Name="ReasonBox" Height="28" Padding="7,3" FontSize="12"
+                                     Background="White" BorderBrush="#B8B5A0"
+                                     ToolTip="مثال: صيانة خط التعبئة — يُترك فارغًا عند عدم وجود توقف"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="ملاحظات العملية / التسليم" Style="{StaticResource FieldLabel}" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" Margin="0,0,0,3"/>
+                            <TextBox x:Name="NotesBox" Height="28" Padding="7,3" FontSize="12"
+                                     Background="White" BorderBrush="#B8B5A0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <DockPanel Margin="12,6,12,6">
+                    <Border DockPanel.Dock="Top" Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="1,1,0,0" Padding="10,5">
+                        <DockPanel LastChildFill="True">
+                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button x:Name="AddSecondaryButton" Content="＋ إضافة مخرج" Click="AddSecondaryRow_Click"
+                                        Padding="8,2" Margin="0,0,8,0" FontSize="11" FontWeight="Bold"
+                                        Foreground="#14532D" Background="#ECFDF3" BorderBrush="#86B99A"/>
+                                <TextBlock x:Name="SecondaryTotalLabel" Text="إجمالي الجلسة: 0.0 كجم"
+                                           FontSize="11" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock x:Name="SecondaryHistoryLabel" Text=""
+                                           FontSize="10.5" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Text="🧪 المخلفات / المخرجات الثانوية"
+                                           FontSize="12" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                    <DataGrid x:Name="SecondaryGrid" MinHeight="66" MaxHeight="126" RowHeight="30" ColumnHeaderHeight="32" AlternationCount="2"
+                              AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                              AlternatingRowBackground="#FBFAF5" Background="#FDFCF8" RowBackground="#FDFCF8"
+                              GridLinesVisibility="None"
+                              BorderBrush="#B8B5A0" BorderThickness="1.5" HeadersVisibility="Column"
+                              LoadingRow="Secondary_LoadingRow" PreviewKeyDown="Secondary_KeyDown">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
+                                <Setter Property="Padding" Value="6,2"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="BorderBrush" Value="#F0EDE4"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                <EventSetter Event="GotFocus" Handler="Secondary_GotFocus"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#16283C"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="FontSize" Value="11"/>
+                                <Setter Property="Padding" Value="8,4"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="BorderBrush" Value="#2A4470"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="المخرج من التعريفات" Width="2*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding ByProductDefinitions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  DisplayMemberPath="Name"
+                                                  SelectedItem="{Binding Definition, UpdateSourceTrigger=PropertyChanged}"
+                                                  Height="24" FontSize="11.5" Background="White" BorderBrush="#B8B5A0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="الكمية" Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="140">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
+                                        <Setter Property="Background" Value="#FFFDF3"/>
+                                        <Setter Property="BorderBrush" Value="#C9A227"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="Padding" Value="6,2"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <EventSetter Event="GotFocus" Handler="Secondary_GotFocus"/>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="الوحدة من التعريف" Binding="{Binding Unit, Mode=OneWay}" Width="130" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Foreground" Value="#6B7280"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </StackPanel>
+
+            <!-- ⑥ شريط ملخص الفعلي المسجل (يظهر عندما يكون الفعلي مسجلاً مسبقاً) -->
+            <Border x:Name="RecordedSummaryBar" Grid.Row="5" Visibility="Collapsed"
+                    Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="0,1,0,0" Padding="14,7">
+                <WrapPanel VerticalAlignment="Center">
+                    <TextBlock Text="✔ ملخص الفعلي المسجل:" FontWeight="Bold" FontSize="12" Foreground="#14532D" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="RecordedRawChip" Text="الخام المستهلك: —" FontSize="11.5" FontWeight="SemiBold" Foreground="#1F2937" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="RecordedDowntimeChip" Text="التوقف: —" FontSize="11.5" FontWeight="SemiBold" Foreground="#1F2937" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="RecordedByProdChip" Text="المخلفات: —" FontSize="11.5" FontWeight="SemiBold" Foreground="#6D28D9" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="RecordedDocsChip" Text="المستندات: —" FontSize="11.5" FontWeight="Bold" Foreground="#0A246A" VerticalAlignment="Center"/>
+                </WrapPanel>
+            </Border>
+
+            <!-- ⑦ شريط الحفظ وإجراءات التسليم البيج (.save: #F4F2E8) -->
+            <Border Grid.Row="6" Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="0,1,0,0" Padding="14,9">
+                <DockPanel>
+                    <WrapPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+                        <Button x:Name="SaveButton" Content="💾 حفظ الفعلي واستلام الإنتاج وإرساله للفحص"
+                                Style="{StaticResource ShapeApproveButton}" Click="Save_Click" Margin="0,0,6,2"/>
+                        <Button x:Name="IssueDeliveryBtn" Content="📤 تحرير أمر التسليم للمخزن"
+                                Style="{StaticResource ShapePrimaryButton}" Click="IssueDelivery_Click" Margin="0,0,6,2"
+                                ToolTip="اعتماد مسودة أمر التسليم وتحريرها للمخزن التام دون ترحيل مباشر للأرصدة"/>
+                        <Button x:Name="OpenReceiptBtn" Content="📥 سند الاستلام المخزني"
+                                Style="{StaticResource ShapeSecondaryButton}" Click="OpenReceipt_Click" Margin="0,0,6,2"
+                                ToolTip="فتح شاشة استلام الإنتاج التام في المخازن"/>
+                        <Button x:Name="OpenQualityBtn" Content="🔍 فحص الجودة"
+                                Style="{StaticResource ShapeSecondaryButton}" Click="OpenQuality_Click" Margin="0,0,0,2"
+                                ToolTip="فتح شاشة فحوصات الجودة لاعتماد الفحص"/>
+                    </WrapPanel>
+
+                    <TextBlock x:Name="FooterActionHint"
+                               Text="بعد الحفظ ينتقل المنتج الفعلي إلى مسودة أمر التسليم وفحص الجودة، ثم يُحرر للاستلام المخزني."
+                               FontSize="11.5" Foreground="#6B7280" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,12,0"/>
+                </DockPanel>
+            </Border>
+
+            <!-- ⑧ الملاحظة السفلية المعتمدة (.note) -->
+            <Border Grid.Row="7" Background="#F4F2E8" BorderBrush="#D9D4C4" BorderThickness="0,1,0,0" Padding="14,5" CornerRadius="0,0,5,5">
+                <TextBlock Text="لا حقول خام مفترضة، ولا أزرار حذف مزعجة داخل الجداول. مفتاح Delete يحذف السطر المحدد في المخلفات."
+                           FontSize="11" Foreground="#6B7280" TextWrapping="Wrap"/>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

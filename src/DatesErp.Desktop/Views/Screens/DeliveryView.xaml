@@ -1,0 +1,138 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.DeliveryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft" Background="{DynamicResource ThemeBackgroundBrush}">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="10" Padding="14" Margin="0,0,0,10">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="6" Padding="12,7" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="رقم السند" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="DocNoBox" Text="—" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#1D4ED8" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeGridLineBrush}" BorderThickness="1" CornerRadius="6" Padding="10,7">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="الحالة:" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,0,6,0"/>
+                            <TextBlock x:Name="StatusBadge" Text="سند جديد" FontWeight="Bold" Foreground="{DynamicResource ThemeWarningBrush}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="تسليم المنتجات للعملاء" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource ThemeTitleBarBrush}"/>
+                    <TextBlock Text="المسودة لا تخصم المخزون؛ الاعتماد وحده ينفّذ الصرف داخل معاملة واحدة." FontSize="12.5" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,3,0,0"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="10" Padding="14" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="1.2*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,12,10">
+                    <TextBlock Text="العميل المستلم *" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="CustomerBox" Height="36" Padding="6,4" DisplayMemberPath="CustomerName" SelectedValuePath="Id" SelectionChanged="Customer_Changed"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,12,10">
+                    <TextBlock Text="تاريخ التسليم *" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,0,5"/>
+                    <DatePicker x:Name="DateBox" Height="36" SelectedDateChanged="Header_Changed"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,12,10">
+                    <TextBlock Text="رقم الحاوية / البوليصة" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,0,5"/>
+                    <TextBox x:Name="ContainerBox" Height="36" Padding="8,5" TextChanged="Header_Changed"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="3" Margin="0,0,12,10">
+                    <TextBlock Text="السائق الناقل" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,0,5"/>
+                    <TextBox x:Name="DriverBox" Height="36" Padding="8,5" TextChanged="Header_Changed"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="4" Margin="0,0,0,10">
+                    <TextBlock Text="الشاحنة / اللوحة" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,0,5"/>
+                    <TextBox x:Name="VehicleBox" Height="36" Padding="8,5" TextChanged="Header_Changed"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
+                    <TextBlock Text="ملاحظات وتوجيهات التسليم" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,0,5"/>
+                    <TextBox x:Name="NotesBox" Height="54" Padding="8,6" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="Header_Changed"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Background="#ECFDF5" BorderBrush="#A7F3D0" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,0,10">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="رصيد العميل حسب الصنف والدفعة والمخزن" FontWeight="Bold" Foreground="{DynamicResource ThemeSuccessBrush}" Margin="0,0,12,0"/>
+                <TextBlock x:Name="BalanceChip" Text="اختر العميل لعرض أرصدته" Foreground="{DynamicResource ThemeSuccessBrush}"/>
+                <TextBlock Text="  •  اختيار الأصناف والدفعات من نافذة الاختيار فقط" Foreground="{DynamicResource ThemeSecondaryTextBrush}" HorizontalAlignment="Left"/>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="3" Background="White" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" Margin="0,0,0,9">
+                    <StackPanel DockPanel.Dock="Right">
+                        <TextBlock Text="بنود التسليم" FontSize="17" FontWeight="Bold" Foreground="{DynamicResource ThemeTitleBarBrush}"/>
+                        <TextBlock Text="سطر مستقل لكل صنف ودفعة وعبوة ومخزن؛ الكميات بوحدة الكرتون." FontSize="11.5" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <Button x:Name="ChooseBatchesButton" Content="＋ اختيار أصناف ودفعات" Padding="14,8" Margin="5,0" Click="OpenProductPicker_Click" Background="{DynamicResource ThemeSuccessBrush}" Foreground="White" FontWeight="Bold" BorderBrush="#166534"/>
+                        <Button x:Name="RemoveLineButton" Content="حذف السطر" Padding="12,8" Margin="5,0" Click="RemoveItem_Click" Background="#FFF1F2" Foreground="#BE123C" BorderBrush="#FECDD3"/>
+                        <Button x:Name="ClearLinesButton" Content="مسح البنود" Padding="12,8" Margin="5,0" Click="ClearBasket_Click" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}"/>
+                    </StackPanel>
+                </DockPanel>
+                <DataGrid x:Name="ItemsGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                          HeadersVisibility="Column" RowHeight="34" ColumnHeaderHeight="46"
+                          AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" SelectionMode="Single">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="White"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsInvalid}" Value="True"><Setter Property="Background" Value="#FFF1F2"/><Setter Property="ToolTip" Value="{Binding ValidationError}"/></DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding RowIndex}" Width="38" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="الصنف" Binding="{Binding ProductName}" Width="*" MinWidth="150" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="الكود" Binding="{Binding Code}" Width="85" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="الدفعة" Binding="{Binding LotCode}" Width="105" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="العبوة" Binding="{Binding PackName}" Width="85" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="تاريخ الإنتاج" Binding="{Binding Production}" Width="96" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="المخزن" Binding="{Binding WarehouseName}" Width="110" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="استلم (كرتون)" Binding="{Binding ReceivedCartons, StringFormat=N0}" Width="92" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="سُلّم سابقاً (كرتون)" Binding="{Binding DeliveredCartons, StringFormat=N0}" Width="105" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="المتاح (كرتون)" Binding="{Binding AvailablePackages, StringFormat=N0}" Width="92" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="التسليم (كرتون)" Binding="{Binding Packages, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Width="115"/>
+                        <DataGridTextColumn Header="حالة الجودة" Binding="{Binding QcStatus}" Width="115" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Border Grid.Row="2" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeGridLineBrush}" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,9,0,0">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <TextBlock Text="أصناف: " Foreground="{DynamicResource ThemeSecondaryTextBrush}"/><TextBlock x:Name="TotProdsDisp" Text="0" FontWeight="Bold" Foreground="{DynamicResource ThemeTitleBarBrush}" Margin="0,0,14,0"/>
+                            <TextBlock Text="دفعات: " Foreground="{DynamicResource ThemeSecondaryTextBrush}"/><TextBlock x:Name="TotLotsDisp" Text="0" FontWeight="Bold" Foreground="{DynamicResource ThemeTitleBarBrush}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <TextBlock Text="إجمالي التسليم:" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="TotCartonsDisp" Text="0 كرتون" FontWeight="Bold" Foreground="#1D4ED8"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <DockPanel Grid.Row="4" Margin="2,0">
+            <TextBlock DockPanel.Dock="Right" Text="المسودة لا تحجز ولا تخصم؛ يعاد فحص الرصيد والدفعة والمخزن عند الاعتماد." Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" FontSize="11.5"/>
+            <TextBlock x:Name="AuditUserText" Text="" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" FontSize="11.5"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,501 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.PlanningView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <UserControl.Resources>
+        <Style x:Key="ShapeApproveButton" TargetType="Button" BasedOn="{StaticResource ErpApproveButton}">
+            <Setter Property="Background" Value="{DynamicResource ThemeSecondaryBrush}"/>
+            <Setter Property="Foreground" Value="#2B2200"/>
+            <Setter Property="BorderBrush" Value="#A8871C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#D6B032"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="#E7E1CA"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#CFC8AC"/>
+                                <Setter Property="Foreground" Value="#8A8470"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShapePrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource ThemePrimaryBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#0F3D22"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="13,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1D5B3A"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="#C7D3CB"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#B2C0B7"/>
+                                <Setter Property="Foreground" Value="#6F7D74"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShapeSecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ThemeAlternateRowBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="#F5F4EE"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- §التصميم المعتمد الموحد: بطاقة العمل #FDFCF8 بحواف #B8B5A0 وشريط أوامر داكن #16283C -->
+    <Border Background="{DynamicResource ThemeTableBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="8" SnapsToDevicePixels="True">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <DockPanel LastChildFill="True">
+
+                <!-- ① شريط الرأس الداكن المعتمد (.cmd: #16283C -> #1D3B57) -->
+                <Border DockPanel.Dock="Top" BorderBrush="#0F1E2E" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="5,5,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{DynamicResource ThemeTitleBarColor}" Offset="0"/>
+                            <GradientStop Color="{DynamicResource ThemeTitleBarEndColor}" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Left" Text="MRPMPS1011" FontFamily="Consolas" FontSize="11"
+                                   Foreground="#CCFFFFFF" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                            <TextBlock Text="مسار المعاملة:" FontWeight="Bold" Foreground="#E2E8F0" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Border x:Name="Step1" Width="24" Height="24" CornerRadius="12" Background="{DynamicResource ThemeSecondaryBrush}" BorderBrush="#FACC15" BorderThickness="1.5">
+                                <TextBlock Text="1" Foreground="{DynamicResource ThemeTextBrush}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11"/>
+                            </Border>
+                            <TextBlock Text="إعداد الخطة" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="6,0,10,0" FontSize="11.5"/>
+                            <TextBlock Text="⟵" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Border x:Name="Step2" Width="24" Height="24" CornerRadius="12" Background="{DynamicResource ThemeTextBrush}">
+                                <TextBlock Text="2" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11"/>
+                            </Border>
+                            <TextBlock Text="اعتماد المدير العام" FontWeight="Bold" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="6,0,10,0" FontSize="11.5"/>
+                            <TextBlock Text="⟵" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Border x:Name="Step3" Width="24" Height="24" CornerRadius="12" Background="{DynamicResource ThemeTextBrush}">
+                                <TextBlock Text="3" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11"/>
+                            </Border>
+                            <TextBlock Text="أوامر التشغيل" FontWeight="Bold" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="6,0,10,0" FontSize="11.5"/>
+                            <TextBlock Text="⟵" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Border x:Name="Step4" Width="24" Height="24" CornerRadius="12" Background="{DynamicResource ThemeTextBrush}">
+                                <TextBlock Text="4" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11"/>
+                            </Border>
+                            <TextBlock Text="الإقفال" FontWeight="Bold" Foreground="#CBD5E1" VerticalAlignment="Center" Margin="6,0,14,0" FontSize="11.5"/>
+                        </StackPanel>
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBlock Text="📅 خطط وجدولة تشغيل وإنتاج التمور" FontSize="15" FontWeight="Bold"
+                                       Foreground="White" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <Button x:Name="SubmitBtn" Content="📤 إرسال للاعتماد" Style="{StaticResource ShapeApproveButton}" Click="Submit_Click" Margin="0,0,6,0"/>
+                            <Button x:Name="ReturnBtn" Content="↩ إعادة للتعديل" Style="{StaticResource ShapeSecondaryButton}" Click="ReturnForRevision_Click" Visibility="Collapsed" Margin="0,0,6,0"/>
+                        </WrapPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- ② شريط شارات السياق البيج (.band.alt: #F4F2E8) -->
+                <Border x:Name="StatusBanner" DockPanel.Dock="Top" Background="{DynamicResource ThemeAlternateRowBrush}" BorderBrush="{DynamicResource ThemeGridLineBrush}" BorderThickness="0,0,0,1" Padding="14,8">
+                    <DockPanel>
+                        <WrapPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+                            <Border Background="#FFF7E0" BorderBrush="#E9CE7E" BorderThickness="1" CornerRadius="12" Padding="10,3" Margin="0,0,8,2">
+                                <TextBlock x:Name="ScheduledDateChip" Text="📅 تاريخ الإنتاج المحدد: —" FontSize="11.5" FontWeight="Bold" Foreground="#8A6A00"/>
+                            </Border>
+                            <Border Background="#EDF3EE" BorderBrush="#CADCCF" BorderThickness="1" CornerRadius="12" Padding="10,3" Margin="0,0,8,2">
+                                <TextBlock x:Name="PeriodChip" Text="الفترة: —" FontSize="11.5" FontWeight="Bold" Foreground="{DynamicResource ThemePrimaryBrush}"/>
+                            </Border>
+                            <Border Background="#F3EEFB" BorderBrush="#D6C8EF" BorderThickness="1" CornerRadius="12" Padding="10,3" Margin="0,0,8,2">
+                                <TextBlock x:Name="ScopeChip" Text="النطاق: 👥 عدة عملاء (مجمع)" FontSize="11.5" FontWeight="Bold" Foreground="#6D28D9"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="StatusText" Text="مسودة قيد الإعداد 📝" FontSize="12.5" FontWeight="Bold" Foreground="{DynamicResource ThemePrimaryBrush}"/>
+                            <TextBlock x:Name="PlanMetaBox" Text="خطة جديدة — لم تُحفظ بعد · أنشأها: — · اعتمدها: —" FontSize="11.5" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- ③ محددات وبيانات الخطة الأساسية -->
+                <Border DockPanel.Dock="Top" Background="White" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="12,10,12,6" Padding="14,10">
+                    <StackPanel>
+                        <!-- صف 1: كود + عنوان + نوع + تاريخ/فترة + وردية + خط -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                                <TextBlock Text="كود الخطة:" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="CodeBox" Width="135" IsReadOnly="True" Background="{DynamicResource ThemeBackgroundBrush}" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="0,0,14,0">
+                                <TextBlock Text="عنوان الخطة *:" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="TitleBox" Width="230" FontWeight="Bold" Foreground="{DynamicResource ThemePrimaryBrush}" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="0,0,14,0">
+                                <TextBlock Text="نوع الخطة:" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox x:Name="TypeBox" Width="110" SelectedIndex="0" SelectionChanged="TypeBox_Changed" Height="28" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="يومية"/>
+                                    <ComboBoxItem Content="أسبوعية"/>
+                                    <ComboBoxItem Content="شهرية"/>
+                                    <ComboBoxItem Content="فترة"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel x:Name="StartPanel" Grid.Column="3" Margin="0,0,8,0">
+                                <TextBlock x:Name="StartLabel" Text="تاريخ الخطة *:" Style="{StaticResource FieldLabel}"/>
+                                <DatePicker x:Name="StartBox" Width="135" SelectedDateChanged="PlanDates_Changed" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel x:Name="EndPanel" Grid.Column="4" Margin="0,0,14,0">
+                                <TextBlock Text="إلى تاريخ *:" Style="{StaticResource FieldLabel}"/>
+                                <DatePicker x:Name="EndBox" Width="135" SelectedDateChanged="PlanDates_Changed" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="5" Margin="0,0,14,0">
+                                <TextBlock Text="الوردية *:" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox x:Name="ShiftBox" Width="165" SelectionChanged="CapacityInputs_Changed" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="6" Margin="0,0,0,0">
+                                <TextBlock Text="خط الإنتاج:" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox x:Name="LineBox" Width="145" SelectionChanged="CapacityInputs_Changed" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <!-- صف 2: نطاق التخطيط + العميل + البيان -->
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,0">
+                                <TextBlock Text="نطاق التخطيط:" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <RadioButton x:Name="MultiRadio" Content="👥 عدة عملاء (مجمع)" IsChecked="True" FontWeight="Bold" GroupName="scope" Margin="0,0,10,0" Checked="Scope_Changed" VerticalAlignment="Center"/>
+                                <RadioButton x:Name="SingleRadio" Content="👤 عميل محدد" FontWeight="Bold" GroupName="scope" Checked="Scope_Changed" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Border x:Name="SingleCustPanel" Grid.Column="1" Background="#FEF9C3" BorderBrush="#FACC15" BorderThickness="1" CornerRadius="4" Padding="8,3" Visibility="Collapsed" Margin="0,0,14,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="العميل:" FontWeight="Bold" Foreground="#854D0E" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <ComboBox x:Name="SingleCustBox" Width="220" DisplayMemberPath="CustomerName" SelectedValuePath="Id" SelectionChanged="SingleCust_Changed" Height="26" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                <TextBlock Text="البيان:" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBox x:Name="NotesBox" Width="380" Height="28" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ④ شريط الإجراءات وسحب الأصناف (.cap: #F7F9F6) -->
+                <Border DockPanel.Dock="Top" Background="{DynamicResource ThemeAlternateRowBrush}" BorderBrush="{DynamicResource ThemeGridLineBrush}" BorderThickness="0,1,0,1" Padding="14,8" Margin="0,2,0,6">
+                    <WrapPanel x:Name="InsertActionsPanel" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                            <RadioButton x:Name="ApproveRadio" Content="اعتماد" IsChecked="True" FontWeight="Bold" GroupName="planact" VerticalAlignment="Center"/>
+                            <RadioButton x:Name="HoldRadio" Content="تعليق" FontWeight="Bold" GroupName="planact" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <Button x:Name="ApproveActionBtn" Content="✅ اعتماد الخطة" Style="{StaticResource ShapeApproveButton}" Click="ApproveAction_Click" Margin="0,0,6,2"/>
+                        <Button x:Name="SaveActionBtn" Content="💾 حفظ الخطة" Style="{StaticResource ShapePrimaryButton}" Click="Save_Click" Visibility="Collapsed" Margin="0,0,6,2"/>
+                        <Button x:Name="CustLotsBtn" Content="👤 أصناف العميل (F4)" Style="{StaticResource ShapeSecondaryButton}" Foreground="{DynamicResource ThemePrimaryBrush}" Click="PickLot_Click" Margin="0,0,6,2"/>
+                        <Button Content="👥 أصناف العملاء (F6)" Style="{StaticResource ShapeSecondaryButton}" Foreground="{DynamicResource ThemeTextBrush}" Click="MultiCustomers_Click" Margin="0,0,6,2"/>
+                        <Button Content="📥 من استلام مباشر" Style="{StaticResource ShapeSecondaryButton}" Foreground="{DynamicResource ThemeWarningBrush}" Click="DirectReceipt_Click" Margin="0,0,6,2"/>
+                        <Button x:Name="FairDistributionBtn" Content="⚖ اقتراح توزيع عادل / تعديل المستقبل" Style="{StaticResource ShapeSecondaryButton}" Foreground="#7C3AED" Click="Fair_Click" Margin="0,0,6,2" ToolTip="مسودة: اقترح توزيعاً. خطة معتمدة: أنشئ إصداراً جديداً للجلسات المستقبلية غير المنفذة فقط."/>
+                        <Button Content="🔍 فحص الخطة" Style="{StaticResource ShapeSecondaryButton}" Foreground="{DynamicResource ThemeTableHeaderBrush}" Click="CheckPlan_Click" Margin="0,0,6,2"
+                                ToolTip="فحص الخطة متعددة العملاء: توزيع البنود (عملاء/أصناف) على أيام الفترة (من–إلى) بنفس عمل التوزيع — والحكم: قابلة للتنفيذ أم فيها عجز"/>
+                        <Button Content="⎘ تكرار الصف" Style="{StaticResource ShapeSecondaryButton}" Click="DuplicateRow_Click" Margin="0,0,6,2" ToolTip="ينسخ الصف المنزَّل المحدد"/>
+                        <Button Content="📥 استيراد Excel" Style="{StaticResource ShapeSecondaryButton}" Click="ImportExcel_Click" Margin="0,0,6,2" ToolTip="استيراد بنود من ملف Excel"/>
+                        <Button Content="💾 حفظ كقالب" Style="{StaticResource ShapeSecondaryButton}" Click="SaveAsTemplate_Click" Margin="0,0,6,2" ToolTip="حفظ الخطة الحالية كقالب لإعادة استخدامها"/>
+                        <Button Content="📋 تحميل قالب" Style="{StaticResource ShapeSecondaryButton}" Click="LoadTemplate_Click" Margin="0,0,6,2" ToolTip="تحميل بنود من قالب محفوظ"/>
+                    </WrapPanel>
+                </Border>
+
+                <!-- ⑤ بطاقات ملخص الطاقة والعدادات الإحصائية -->
+                <Border DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="12,4,12,6" Padding="12,8">
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                            <Border Background="#FEF3C7" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⏱️ طاقة الوردية:" FontWeight="Bold" Foreground="{DynamicResource ThemeWarningBrush}" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11.5"/>
+                                    <TextBlock x:Name="CapacitySummary" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" MaxWidth="500"
+                                               Text="إجمالي المجدول: 0 كرتون (0.0 ساعة) من أصل 0 كرتون (0.0 ساعات)." Foreground="{DynamicResource ThemeTextBrush}" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="11.5"
+                                               ToolTip="تفاصيل طاقة الأيام تظهر هنا عند التمرير"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <WrapPanel VerticalAlignment="Center">
+                            <Border Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,8,2">
+                                <TextBlock x:Name="TotItemsBox" Text="البنود: 0" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" FontSize="12" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Background="#EFF6FF" BorderBrush="#93C5FD" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,8,2">
+                                <TextBlock x:Name="TotCartonsBox" Text="كراتين: 0" FontWeight="Bold" Foreground="#1D4ED8" FontSize="12" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Background="#F0FDF4" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,8,2">
+                                <TextBlock x:Name="TotQtyBox" Text="وزن الإنتاج التام: 0 كجم" FontWeight="Bold" Foreground="#15803D" FontSize="12" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Background="#FAF5FF" BorderBrush="#D8B4FE" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,8,2">
+                                <TextBlock x:Name="TotCustsBox" Text="عملاء: 0" FontWeight="Bold" Foreground="#7E22CE" FontSize="12" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Background="#ECFDF5" BorderBrush="#6EE7B7" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,0,2">
+                                <TextBlock x:Name="RemainingBadge" Text="الساعات المتبقية: 0.0 س" FontWeight="Bold" Foreground="#047857" FontSize="12" VerticalAlignment="Center"/>
+                            </Border>
+                        </WrapPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- ⑥ جدول بنود الخطة المنزَّلة من شاشة اختيار الأصناف -->
+                <Border DockPanel.Dock="Top" Background="White" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="12,4,12,12" Padding="12">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,8" LastChildFill="False">
+                            <TextBlock DockPanel.Dock="Right" Text="📦 بنود الخطة المنزَّلة — الاختيار حصراً من شاشة اختيار الأصناف المنبثقة (F4 / F6 / استلام مباشر)" FontSize="12.5" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center"/>
+                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                <Button x:Name="EditRowBtn" Content="✏️ تعديل البند" Style="{StaticResource ShapeSecondaryButton}" Click="EditRow_Click" ToolTip="تعديل التاريخ/الكمية لبند محفوظ" Margin="0,0,6,0"/>
+                            </StackPanel>
+                        </DockPanel>
+                        <Border Background="#FEFCE8" BorderBrush="#FEF08A" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,10">
+                            <TextBlock TextWrapping="Wrap" FontSize="11.5" Foreground="#854D0E">
+                                <Run FontWeight="Bold">طريقة العمل المعتمدة:</Run>
+                                <Run>اضغط «أصناف العميل (F4)» أو «أصناف العملاء (F6)» أو «من استلام مباشر» لفتح شاشة اختيار الأصناف المنبثقة، وحدد الأصناف والكميات بوحدة الاستلام (كجم / كرتون / سلة بحسب ما تم استلامه) أو بعدد الكراتين، ثم اضغط «إنزال المحدد للخطة» لتنزل البنود مباشرةً إلى أماكنها في الجدول أدناه دون الحاجة لتعديل بطاقة الصنف.</Run>
+                            </TextBlock>
+                        </Border>
+                        <DataGrid x:Name="RowsGrid" MinHeight="280" RowHeight="38" FontSize="12.5" ColumnHeaderHeight="38" AutoGenerateColumns="False" CanUserAddRows="False"
+                                  AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" RowBackground="{DynamicResource ThemeTableBackgroundBrush}"
+                                  HeadersVisibility="Column" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="{DynamicResource ThemeTableBorderThickness}"
+                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                  LoadingRow="RowsGrid_LoadingRow">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsInvalid}" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource InvalidRowBrush}"/>
+                                            <Setter Property="ToolTip" Value="{Binding QuantityError}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
+                                    <Setter Property="Padding" Value="4,2"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+                                    <Setter Property="BorderThickness" Value="{DynamicResource ThemeColumnDividerThickness}"/>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="م" Binding="{Binding No}" Width="38" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn x:Name="CustomerColumn" Header="العميل المالك 👤" Binding="{Binding CustomerName}" Width="135" MinWidth="120" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="ToolTip" Value="{Binding CustomerName}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="المخزن 🏬" Binding="{Binding WarehouseName}" Width="120" MinWidth="100" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="الدفعة / سند الاستلام 📦" Width="145" MinWidth="130" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+                                                <TextBlock Text="{Binding ShipmentNo}" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}"/>
+                                                <TextBlock Text=" - " Foreground="#9A9782" Margin="2,0"/>
+                                                <TextBlock Text="{Binding LotCode}" FontSize="10.5" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center"/>
+                                                <StackPanel.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding ShipmentNo, StringFormat=سند الاستلام: {0}}" FontWeight="Bold"/>
+                                                        <TextBlock Text="{Binding LotCode, StringFormat=الدفعة: {0}}"/>
+                                                    </StackPanel>
+                                                </StackPanel.ToolTip>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="الصنف التام 🏷️" Binding="{Binding ProductName}" Width="140" MinWidth="120" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="ToolTip" Value="{Binding ProductName}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="الوحدة / وزن الكرتون" Binding="{Binding UnitDisplay}" Width="130" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontSize" Value="11"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="ToolTip" Value="{Binding UnitDisplay}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="الرصيد الفعلي" Binding="{Binding OnHandKg, StringFormat=N1}" Width="95" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="المحجوز" Binding="{Binding ReservedKg, StringFormat=N1}" Width="85" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="المتاح بوحدة الاستلام" Binding="{Binding AvailableLotUnitDisplay}" Width="135" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                            <Setter Property="FontSize" Value="11"/>
+                                            <Setter Property="ToolTip" Value="{Binding AvailableLotUnitDisplay}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Header="وحدة التخطيط" Width="105">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding SourceModes}" SelectedItem="{Binding SourceMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="4,1" FontSize="11.5"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="الكمية بوحدة الاستلام" Binding="{Binding SourceQtyInputText, UpdateSourceTrigger=LostFocus}" Width="130">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Foreground" Value="#854D0E"/>
+                                            <Setter Property="ToolTip" Value="عدّل الكمية بوحدة الاستلام (كجم / كرتون / سلة بحسب ما تم استلامه) ليُشتق عدد الكراتين التامة واحتياج الخام تلقائياً"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="نسبة الفرز %" Binding="{Binding WastePercentText, UpdateSourceTrigger=LostFocus}" Width="85">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                            <Setter Property="ToolTip" Value="نسبة الفرز/الفاقد المتوقعة للدفعة (%) — اختيارية (افتراضياً 0% = صافي الوزن 1:1)"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="احتياج/تخصيص الخام (كجم)" Binding="{Binding RawRequiredInputText, UpdateSourceTrigger=LostFocus}" Width="145">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource ThemePrimaryBrush}"/>
+                                            <Setter Property="ToolTip" Value="يُحسب تلقائياً من وزن الإنتاج التام + نسبة الفرز%، ويمكنك كتابة كمية الخام المراد سحبها من الدفعة مباشرة"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="حالة احتياج الخام" Binding="{Binding RawPlanStatus}" Width="155" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="ملخص السحب" Binding="{Binding SourceDisplay}" Width="130" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="FontSize" Value="11"/>
+                                            <Setter Property="ToolTip" Value="{Binding SourceDisplay}"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="الكراتين *" Binding="{Binding CartonsText, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" Width="80">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="وزن الإنتاج التام (كجم) ⚖️" Binding="{Binding QtyKg, StringFormat=N1}" Width="135" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="المتبقي بعد" Binding="{Binding RemainingAfterKg, StringFormat=N1}" Width="85" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn x:Name="DateColumn" Header="تاريخ الإنتاج 📅" Width="130">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DatePicker SelectedDate="{Binding DateValue, UpdateSourceTrigger=PropertyChanged}" FontSize="11" Padding="2,0"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="الوردية" Binding="{Binding ShiftName}" Width="85" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="الخط" Binding="{Binding LineName}" Width="75" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="حذف" Width="48">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="✕" Padding="4,0" Style="{StaticResource ErpDangerButton}" Click="RemoveRow_Click" Tag="{Binding No}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <TextBlock x:Name="GridHintPlan" FontSize="11.5" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{DynamicResource ThemeSecondaryTextBrush}"
+                            Text="لا توجد بنود منزَّلة بعد — افتح شاشة اختيار الأصناف المنبثقة (F4 أو F6 أو من استلام مباشر) لاختيار الدفعات والأصناف وإنزالها إلى جدول الخطة."/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

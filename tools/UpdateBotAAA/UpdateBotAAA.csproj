@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>UpdateBot_AAA</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <Version>1.50.123</Version>
+    <AssemblyVersion>1.50.123.0</AssemblyVersion>
+    <FileVersion>1.50.123.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+</Project>

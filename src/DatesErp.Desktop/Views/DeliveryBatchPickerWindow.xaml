@@ -1,0 +1,78 @@
+<Window x:Class="DatesErp.Desktop.Views.DeliveryBatchPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="اختيار أصناف ودفعات للتسليم" Width="1280" Height="700" MinWidth="1040" MinHeight="560"
+        WindowStartupLocation="CenterOwner" FlowDirection="RightToLeft" Background="{DynamicResource ThemeBackgroundBrush}">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,0,10">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right">
+                    <TextBlock Text="اختيار رصيد العميل" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource ThemeTitleBarBrush}"/>
+                    <TextBlock x:Name="CustomerLabel" Text="" FontSize="13" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,4,0,0"/>
+                </StackPanel>
+                <TextBlock x:Name="BalanceSummary" Text="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeSuccessBrush}"/>
+            </DockPanel>
+        </Border>
+        <DockPanel Grid.Row="1" LastChildFill="False" Margin="0,0,0,8">
+            <TextBlock Text="بحث في الصنف أو الكود أو الدفعة أو المخزن:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource ThemeTextBrush}"/>
+            <TextBox x:Name="SearchBox" Width="360" Height="34" Padding="9,5" VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged"/>
+            <Button Content="تحديد كل المتاح" Margin="10,0,4,0" Padding="12,5" Click="SelectAll_Click" Background="#DBEAFE" BorderBrush="#93C5FD"/>
+            <Button Content="إلغاء التحديد" Margin="4,0" Padding="12,5" Click="ClearAll_Click" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}"/>
+        </DockPanel>
+        <Grid Grid.Row="2">
+        <DataGrid x:Name="BatchGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                  IsReadOnly="False" SelectionMode="Extended" HeadersVisibility="Column" RowHeight="34" ColumnHeaderHeight="44" AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}"
+                  PreviewKeyDown="BatchGrid_PreviewKeyDown">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="اختيار" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate><CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsSelectable}" HorizontalAlignment="Center" VerticalAlignment="Center"/></DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="الصنف" Binding="{Binding ProductName}" Width="140" IsReadOnly="True"/>
+                <DataGridTextColumn Header="الكود" Binding="{Binding ProductCode}" Width="78" IsReadOnly="True"/>
+                <DataGridTextColumn Header="الدفعة" Binding="{Binding LotCode}" Width="82" IsReadOnly="True"/>
+                <DataGridTextColumn Header="العبوة" Binding="{Binding PackName}" Width="76" IsReadOnly="True"/>
+                <DataGridTextColumn Header="المخزن" Binding="{Binding WarehouseName}" Width="104" IsReadOnly="True"/>
+                <DataGridTextColumn Header="تاريخ الإنتاج" Binding="{Binding ProductionDate}" Width="88" IsReadOnly="True"/>
+                <DataGridTextColumn Header="استلم (كرتون)" Binding="{Binding ReceivedCartons, StringFormat=N0}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="سُلّم سابقاً (كرتون)" Binding="{Binding DeliveredCartons, StringFormat=N0}" Width="98" IsReadOnly="True"/>
+                <DataGridTextColumn Header="المتاح (كرتون)" Binding="{Binding AvailableCartons, StringFormat=N0}" Width="98" IsReadOnly="True"/>
+                <DataGridTextColumn Header="التسليم (كرتون)" Binding="{Binding RequestedCartons, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Width="112">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelectable}" Value="False">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="ToolTip" Value="{Binding Grade}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="الجودة" Binding="{Binding Grade}" Width="108" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Border x:Name="EmptyState" Background="#FFFFFF" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="10"
+                Margin="12" Padding="28" Visibility="Collapsed" IsHitTestVisible="False">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="لا توجد أرصدة إنتاج تام لهذا العميل" FontSize="19" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Text="يظهر هنا الرصيد الفعلي المسجل للعميل في مخازن الإنتاج التام؛ المسودات لا تحجز الرصيد." Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource ThemeSecondaryTextBrush}" TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        </Grid>
+        <DockPanel Grid.Row="3" Margin="0,10,0,0">
+            <TextBlock x:Name="SelectionSummary" Text="لم يتم اختيار دفعات" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}"/>
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Button Content="إضافة المحدد إلى السند" MinWidth="190" Padding="16,9" Margin="8,0,0,0" Click="Apply_Click" Background="{DynamicResource ThemeSuccessBrush}" Foreground="White" FontWeight="Bold" BorderBrush="#166534"/>
+                <Button Content="إلغاء" MinWidth="100" Padding="14,9" Margin="8,0,0,0" IsCancel="True" Click="Cancel_Click"/>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>
