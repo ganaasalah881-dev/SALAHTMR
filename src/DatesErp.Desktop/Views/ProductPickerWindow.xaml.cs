@@ -28,6 +28,7 @@ public partial class ProductPickerWindow : Window
         public string GroupCode { get; set; }
         public string ItemType { get; set; }
         public string DefaultPackName { get; set; }
+        public double CartonWeightKg { get; set; }
         public Product Entity { get; set; }
     }
 
@@ -82,6 +83,7 @@ public partial class ProductPickerWindow : Window
                 GroupCode = p.GroupCode,
                 ItemType = p.ItemType,
                 DefaultPackName = p.DefaultPackagingTypeId.HasValue && packs.TryGetValue(p.DefaultPackagingTypeId.Value, out var pn) ? pn : "—",
+                CartonWeightKg = p.CartonWeightKg,
                 Entity = p
             }).ToList();
 

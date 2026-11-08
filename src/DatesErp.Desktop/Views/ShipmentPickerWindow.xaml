@@ -1,21 +1,71 @@
-﻿<Window x:Class="DatesErp.Desktop.Views.ShipmentPickerWindow"
+<Window x:Class="DatesErp.Desktop.Views.ShipmentPickerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="اختيار إيصال سابق للنسخ" Height="420" Width="640" FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner">
-    <DockPanel Margin="12">
-        <TextBlock DockPanel.Dock="Top" Text="📋 إيصالات سابقة — اختر إيصالاً لنسخ بنوده إلى السند الحالي" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,8,0,0">
-            <Button Content="✅ نسخ" Style="{StaticResource ErpPrimaryButton}" Click="Ok_Click" Width="90"/>
-            <Button Content="إلغاء" Style="{StaticResource ErpButton}" Click="Cancel_Click" Width="80" Margin="8,0,0,0"/>
-        </StackPanel>
-        <DataGrid x:Name="Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" SelectionMode="Single">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="رقم الإيصال" Binding="{Binding DocumentNumber}" Width="140"/>
-                <DataGridTextColumn Header="العميل" Binding="{Binding CustomerId}" Width="80"/>
-                <DataGridTextColumn Header="التاريخ" Binding="{Binding ReceivedDate}" Width="110"/>
-                <DataGridTextColumn Header="الوزن" Binding="{Binding TotalWeightKg}" Width="100"/>
-                <DataGridTextColumn Header="بنود" Binding="{Binding Items.Count}" Width="60"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </DockPanel>
+        Title="اختيار إيصال سابق للنسخ" Width="940" Height="560" MinWidth="800" MinHeight="450"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource ThemeBackgroundBrush}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- العنوان والبحث -->
+        <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,12" Padding="14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <TextBlock Text="📋" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="إيصالات سابقة — اختر إيصالاً لنسخ بنوده إلى السند الحالي" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource ThemeTableHeaderBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Border DockPanel.Dock="Left" Background="#F1F5F9" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="10,3">
+                        <TextBlock x:Name="CountText" Text="—" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource ThemeSecondaryTextBrush}"/>
+                    </Border>
+                </DockPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="بحث سريع:" VerticalAlignment="Center" FontWeight="Bold" FontSize="13" Margin="0,0,10,0" Foreground="{DynamicResource ThemeTextBrush}"/>
+                    <TextBox Grid.Column="1" x:Name="SearchBox" FontSize="13" Height="34" Padding="10,5" TextChanged="SearchBox_TextChanged"
+                             ToolTip="ابحث برقم الإيصال أو اسم العميل أو الحاوية" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- جدول الإيصالات -->
+        <Border Grid.Row="1" Style="{StaticResource WhiteCard}" Margin="0,0,0,12" Padding="0">
+            <DataGrid x:Name="Grid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      SelectionMode="Single" SelectionUnit="FullRow" RowHeight="36" FontSize="13"
+                      MouseDoubleClick="Grid_DoubleClick"
+                      BorderThickness="0" Background="{DynamicResource ThemeTableBackgroundBrush}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="رقم السند" Binding="{Binding DocumentNumber}" Width="150"/>
+                    <DataGridTextColumn Header="العميل" Binding="{Binding CustomerName}" Width="*"/>
+                    <DataGridTextColumn Header="تاريخ الاستلام" Binding="{Binding ReceivedDate, StringFormat=dd/MM/yyyy}" Width="120"/>
+                    <DataGridTextColumn Header="إجمالي الوزن (كجم)" Binding="{Binding TotalWeightKg, StringFormat=N1}" Width="140"/>
+                    <DataGridTextColumn Header="عدد البنود" Binding="{Binding ItemsCount}" Width="90"/>
+                    <DataGridTextColumn Header="رقم الحاوية" Binding="{Binding ContainerNumber}" Width="130"/>
+                    <DataGridTextColumn Header="الوسيلة / الباخرة" Binding="{Binding VesselName}" Width="130"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- الأزرار -->
+        <DockPanel Grid.Row="2">
+            <TextBlock DockPanel.Dock="Right" Text="💡 انقر نقراً مزدوجاً على الصف للنسخ المباشر."
+                       VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource ThemeSecondaryTextBrush}"/>
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Button Content="✅ نسخ البنود" Style="{StaticResource ErpPrimaryButton}" Width="120" Height="34" Margin="0,0,10,0" Click="Ok_Click" IsDefault="True"/>
+                <Button Content="✖ إلغاء" Style="{StaticResource ErpButton}" Width="85" Height="34" Click="Cancel_Click" IsCancel="True"/>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
 </Window>

@@ -8,61 +8,61 @@
          قوائم وجداول واسعة لا تخرج بياناتها عن النطاق.
          ═══════════════════════════════════════════════════════════════ -->
     <!-- موارد الثيم الديناميكية: ThemeManager يحدّثها لحظياً لكل النوافذ الحالية والجديدة. -->
-    <Color x:Key="ThemePrimaryColor">#16283C</Color>
-    <Color x:Key="ThemeSecondaryColor">#C9A227</Color>
-    <Color x:Key="ThemeBackgroundColor">#E9E6DC</Color>
-    <Color x:Key="ThemeWindowBackgroundColor">#E9E6DC</Color>
-    <Color x:Key="ThemeTableBackgroundColor">#FDFCF8</Color>
-    <Color x:Key="ThemeTableHeaderColor">#16283C</Color>
-    <Color x:Key="ThemeTextColor">#1F2937</Color>
-    <Color x:Key="ThemeSecondaryTextColor">#6B7280</Color>
-    <Color x:Key="ThemeButtonColor">#14532D</Color>
-    <Color x:Key="ThemeButtonHoverColor">#1D5B3A</Color>
-    <Color x:Key="ThemeButtonPressedColor">#0F3D22</Color>
-    <Color x:Key="ThemeBorderColor">#B8B5A0</Color>
-    <Color x:Key="ThemeGridLineColor">#D9D4C4</Color>
-    <Color x:Key="ThemeSuccessColor">#166534</Color>
-    <Color x:Key="ThemeWarningColor">#92400E</Color>
-    <Color x:Key="ThemeErrorColor">#B42318</Color>
-    <Color x:Key="ThemeInfoColor">#0A246A</Color>
-    <Color x:Key="ThemeSelectedRowColor">#E8F1FA</Color>
-    <Color x:Key="ThemeHoverRowColor">#F4F8F3</Color>
-    <Color x:Key="ThemeAlternateRowColor">#FBFAF5</Color>
-    <Color x:Key="ThemeCardBackgroundColor">#FDFCF8</Color>
+    <Color x:Key="ThemePrimaryColor">#0F172A</Color>
+    <Color x:Key="ThemeSecondaryColor">#2563EB</Color>
+    <Color x:Key="ThemeBackgroundColor">#F8FAFC</Color>
+    <Color x:Key="ThemeWindowBackgroundColor">#F8FAFC</Color>
+    <Color x:Key="ThemeTableBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="ThemeTableHeaderColor">#1E293B</Color>
+    <Color x:Key="ThemeTextColor">#0F172A</Color>
+    <Color x:Key="ThemeSecondaryTextColor">#475569</Color>
+    <Color x:Key="ThemeButtonColor">#0284C7</Color>
+    <Color x:Key="ThemeButtonHoverColor">#0369A1</Color>
+    <Color x:Key="ThemeButtonPressedColor">#075985</Color>
+    <Color x:Key="ThemeBorderColor">#CBD5E1</Color>
+    <Color x:Key="ThemeGridLineColor">#E2E8F0</Color>
+    <Color x:Key="ThemeSuccessColor">#16A34A</Color>
+    <Color x:Key="ThemeWarningColor">#D97706</Color>
+    <Color x:Key="ThemeErrorColor">#DC2626</Color>
+    <Color x:Key="ThemeInfoColor">#2563EB</Color>
+    <Color x:Key="ThemeSelectedRowColor">#E0F2FE</Color>
+    <Color x:Key="ThemeHoverRowColor">#F1F5F9</Color>
+    <Color x:Key="ThemeAlternateRowColor">#F8FAFC</Color>
+    <Color x:Key="ThemeCardBackgroundColor">#FFFFFF</Color>
     <Color x:Key="ThemeInputBackgroundColor">#FFFFFF</Color>
-    <Color x:Key="ThemeTitleBarColor">#16283C</Color>
-    <Color x:Key="ThemeTitleBarEndColor">#1D3B57</Color>
+    <Color x:Key="ThemeTitleBarColor">#0F172A</Color>
+    <Color x:Key="ThemeTitleBarEndColor">#1E293B</Color>
     <SolidColorBrush x:Key="ThemeGridLineBrush" Color="{StaticResource ThemeGridLineColor}"/>
     <SolidColorBrush x:Key="ThemeButtonTextColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ThemeButtonTextBrush" Color="#FFFFFF"/>
-    <FontFamily x:Key="ThemeBodyFontFamily">Segoe UI</FontFamily>
-    <FontFamily x:Key="ThemeHeadingFontFamily">Segoe UI</FontFamily>
-    <system:Double x:Key="ThemeBaseFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">12.5</system:Double>
-    <system:Double x:Key="ThemeTableFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">12.5</system:Double>
-    <system:Double x:Key="ThemeButtonFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">12</system:Double>
+    <FontFamily x:Key="ThemeBodyFontFamily">Segoe UI, Tahoma, Arial</FontFamily>
+    <FontFamily x:Key="ThemeHeadingFontFamily">Segoe UI, Tahoma, Arial</FontFamily>
+    <system:Double x:Key="ThemeBaseFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">13</system:Double>
+    <system:Double x:Key="ThemeTableFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">13</system:Double>
+    <system:Double x:Key="ThemeButtonFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">13</system:Double>
     <system:Double x:Key="ThemePageTitleFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">18</system:Double>
     <system:Double x:Key="ThemeSectionTitleFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">15</system:Double>
-    <system:Double x:Key="ThemeRowHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">32</system:Double>
-    <system:Double x:Key="ThemeTitleBarHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">34</system:Double>
-    <system:Double x:Key="ThemeTableHeaderHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">32</system:Double>
-    <system:Double x:Key="ThemeButtonHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">30</system:Double>
+    <system:Double x:Key="ThemeRowHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">36</system:Double>
+    <system:Double x:Key="ThemeTitleBarHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">38</system:Double>
+    <system:Double x:Key="ThemeTableHeaderHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">38</system:Double>
+    <system:Double x:Key="ThemeButtonHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">34</system:Double>
     <Thickness x:Key="ThemeInputBorderThickness">1</Thickness>
     <Thickness x:Key="ThemeButtonBorderThickness">1</Thickness>
-    <Thickness x:Key="ThemeTableBorderThickness">1.8</Thickness>
+    <Thickness x:Key="ThemeTableBorderThickness">1</Thickness>
     <Thickness x:Key="ThemeCardBorderThickness">1</Thickness>
-    <Thickness x:Key="ThemeColumnDividerThickness">0,0,0.75,0.75</Thickness>
+    <Thickness x:Key="ThemeColumnDividerThickness">0,0,1,1</Thickness>
     <DataGridGridLinesVisibility x:Key="ThemeGridLinesVisibility">All</DataGridGridLinesVisibility>
-    <Thickness x:Key="ThemeInputPadding">6,4</Thickness>
+    <Thickness x:Key="ThemeInputPadding">8,5</Thickness>
     <Thickness x:Key="ThemeButtonPadding">14,6</Thickness>
     <CornerRadius x:Key="ThemeCornerRadius">6</CornerRadius>
     <CornerRadius x:Key="ThemeButtonCornerRadius">6</CornerRadius>
 
-    <Color x:Key="PrimaryColor">#16283C</Color>
-    <Color x:Key="PrimaryDarkColor">#0F1E2E</Color>
-    <Color x:Key="AccentColor">#C9A227</Color>
-    <Color x:Key="LightBgColor">#E9E6DC</Color>
-    <Color x:Key="BorderColor">#B8B5A0</Color>
-    <Color x:Key="DangerColor">#B42318</Color>
+    <Color x:Key="PrimaryColor">#0F172A</Color>
+    <Color x:Key="PrimaryDarkColor">#020617</Color>
+    <Color x:Key="AccentColor">#2563EB</Color>
+    <Color x:Key="LightBgColor">#F8FAFC</Color>
+    <Color x:Key="BorderColor">#CBD5E1</Color>
+    <Color x:Key="DangerColor">#DC2626</Color>
     <Color x:Key="SuccessColor">#166534</Color>
     <Color x:Key="NavyColor">#16283C</Color>
     <!-- §44 ألوان دلالية موحّدة للاتساق: سطح/حبر/صامت/سطر/نجاح/تحذير/خطر -->
@@ -124,7 +124,7 @@
     <!-- ═══ §19/§20 — معيار الجداول الموحد: حدود واضحة، خطوط فصل، رؤوس واضحة،
          ارتفاع صف مناسب، تمييز الصف المحدد، تمرير عند كثرة البيانات ═══ -->
     <Style x:Key="ErpDataGridCellStyle" TargetType="DataGridCell">
-        <Setter Property="Padding" Value="6,3"/>
+        <Setter Property="Padding" Value="10,6"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource ThemeColumnDividerThickness}"/>
         <Setter Property="Template">
@@ -150,13 +150,12 @@
         <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
         <Setter Property="Background" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="{DynamicResource ThemeTableBorderThickness}"/>
-        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="GridLinesVisibility" Value="All"/>
         <Setter Property="AlternationCount" Value="2"/>
         <Setter Property="RowBackground" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
         <Setter Property="AlternatingRowBackground" Value="{DynamicResource ThemeAlternateRowBrush}"/>
         <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
-        <!-- الفاصل العمودي كان بلون الخلفية فيختفي؛ استخدم لون الحدود نفسه. -->
         <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="RowHeight" Value="{DynamicResource ThemeRowHeight}"/>
@@ -169,11 +168,11 @@
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="{DynamicResource ThemeTableHeaderBrush}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
-                    <Setter Property="FontWeight" Value="{DynamicResource ThemeHeadingWeight}"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
                     <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
-                    <Setter Property="Padding" Value="8,5"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+                    <Setter Property="Padding" Value="10,8"/>
+                    <Setter Property="BorderBrush" Value="#334155"/>
                     <Setter Property="BorderThickness" Value="{DynamicResource ThemeColumnDividerThickness}"/>
                     <Setter Property="HorizontalContentAlignment" Value="{DynamicResource ThemeTextAlignment}"/>
                 </Style>

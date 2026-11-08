@@ -5,48 +5,37 @@
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         FlowDirection="RightToLeft">
     <Window.Background>
-        <RadialGradientBrush GradientOrigin="0.5,0.4" Center="0.5,0.5" RadiusX="0.9" RadiusY="0.9">
-            <GradientStop Color="#2C5282" Offset="0"/>
-            <GradientStop Color="#1A365D" Offset="0.55"/>
-            <GradientStop Color="{DynamicResource ThemeTitleBarColor}" Offset="1"/>
-        </RadialGradientBrush>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0F172A" Offset="0"/>
+            <GradientStop Color="#1E293B" Offset="0.5"/>
+            <GradientStop Color="#0F766E" Offset="1"/>
+        </LinearGradientBrush>
     </Window.Background>
 
     <Grid>
-        <!-- ═══ نافذة ERP الكلاسيكية (مطابقة للنظام المرجعي) ═══ -->
-        <Border Width="790" Background="#F4F3EA" BorderBrush="#5C768D" BorderThickness="2" CornerRadius="4">
+        <!-- ═══ نافذة ERP الحديثة (تصميم موحّد، أنيق واحترافي) ═══ -->
+        <Border Width="820" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
             <Border.Effect>
-                <DropShadowEffect ShadowDepth="0" BlurRadius="36" Opacity="0.55" Color="Black"/>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="40" Opacity="0.35" Color="#000000"/>
             </Border.Effect>
             <DockPanel>
                 <!-- شريط العنوان -->
-                <Border DockPanel.Dock="Top" Padding="10,5">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#A8C2D8" Offset="0"/>
-                            <GradientStop Color="#7E9EB8" Offset="0.45"/>
-                            <GradientStop Color="#5E82A0" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
+                <Border DockPanel.Dock="Top" Background="#0F172A" Padding="14,10" CornerRadius="7,7,0,0">
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                            <Border Width="18" Height="16" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="2" Margin="2,0" Cursor="Hand" MouseLeftButtonDown="FakeMin_Click" ToolTip="تصغير">
-                                <TextBlock Text="—" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Width="22" Height="20" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Margin="2,0" Cursor="Hand" MouseLeftButtonDown="FakeMin_Click" ToolTip="تصغير">
+                                <TextBlock Text="—" FontSize="10" Foreground="#94A3B8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <Border Width="18" Height="16" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="2" Margin="2,0" Cursor="Hand" MouseLeftButtonDown="FakeMax_Click" ToolTip="تكبير/استعادة">
-                                <TextBlock Text="□" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Width="22" Height="20" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Margin="2,0" Cursor="Hand" MouseLeftButtonDown="FakeMax_Click" ToolTip="تكبير/استعادة">
+                                <TextBlock Text="□" FontSize="10" Foreground="#94A3B8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <Border Width="18" Height="16" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" CornerRadius="2" Margin="2,0" Cursor="Hand" MouseLeftButtonDown="FakeClose_Click" ToolTip="إغلاق">
-                                <TextBlock Text="✕" FontSize="9" Foreground="#B91C1C" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Width="22" Height="20" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Margin="2,0" Cursor="Hand" MouseLeftButtonDown="FakeClose_Click" ToolTip="إغلاق">
+                                <TextBlock Text="✕" FontSize="10" Foreground="#EF4444" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🌴" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock x:Name="TitleBarText" Text="نظام التصنيع — تسجيل الدخول" Foreground="White" FontWeight="Bold" FontSize="12.5">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect ShadowDepth="1" BlurRadius="2" Opacity="0.6"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
+                            <TextBlock Text="🌴" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="TitleBarText" Text="نظام التصنيع — تسجيل الدخول" Foreground="#F8FAFC" FontWeight="Bold" FontSize="13"/>
                         </StackPanel>
                     </DockPanel>
                 </Border>
@@ -54,68 +43,64 @@
                 <!-- جسم النافذة: الهوية + نموذج الدخول -->
                 <Grid>
                     <Grid.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#FBFBF7" Offset="0"/>
-                            <GradientStop Color="#F5F4EC" Offset="0.6"/>
-                            <GradientStop Color="{DynamicResource ThemeBackgroundColor}" Offset="1"/>
-                        </LinearGradientBrush>
+                        <SolidColorBrush Color="#FFFFFF"/>
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="320"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- ═══ لوحة الهوية (العلامة التجارية) ═══ -->
-                    <Border Grid.Column="0" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="0,0,1,0" Padding="28,24">
+                    <Border Grid.Column="0" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0" Padding="32,24" Background="#FAFAFA">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                             <!-- الشعار: المرفوع من الإعدادات أو الافتراضي الذهبي -->
-                            <Grid HorizontalAlignment="Center" Margin="0,0,0,12">
-                                <!-- الشعار هو العنصر البصري الرئيسي: مساحة كبيرة مع حفظ نسبة أبعاده وجودة التحجيم. -->
-                                <Image x:Name="LogoImage" Width="420" Height="320" Stretch="Uniform"
+                            <Grid HorizontalAlignment="Center" Margin="0,0,0,16">
+                                <!-- الشعار هو العنصر البصري الرئيسي: منع الانعكاس بعرضه FlowDirection=LeftToRight -->
+                                <Image x:Name="LogoImage" Width="400" Height="280" Stretch="Uniform" FlowDirection="LeftToRight"
                                        RenderOptions.BitmapScalingMode="HighQuality" Visibility="Collapsed"/>
-                                <Border x:Name="DefaultLogo" Width="132" Height="132" CornerRadius="24" Background="{DynamicResource ThemeSecondaryBrush}" BorderBrush="#0B3D1F" BorderThickness="2.5">
-                                    <TextBlock Text="🌴" FontSize="66" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border x:Name="DefaultLogo" Width="130" Height="130" CornerRadius="20" Background="#0F766E" BorderBrush="#0D9488" BorderThickness="2">
+                                    <TextBlock Text="🌴" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                             </Grid>
                             <TextBlock x:Name="CompanyNameText" Text="نظام التصنيع" FontSize="22" FontWeight="Bold"
-                                       Foreground="#0B3D1F" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
-                            <TextBlock Text="النظام المتكامل لإدارة عمليات التصنيع" FontSize="14" Foreground="{DynamicResource ThemeSecondaryBrush}"
-                                       FontWeight="Bold" HorizontalAlignment="Center" Margin="0,6,0,14"/>
-                            <Border Height="2" Width="220" Background="{DynamicResource ThemeSecondaryBrush}" Opacity="0.65" HorizontalAlignment="Center"/>
-                            <TextBlock x:Name="CompanyMetaText" Text="" FontSize="11.5" Foreground="#5F6368"
+                                       Foreground="#0F172A" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                            <TextBlock Text="النظام المتكامل لإدارة وتتبع عمليات التصنيع" FontSize="13.5" Foreground="#0F766E"
+                                       FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,6,0,14"/>
+                            <Border Height="2" Width="180" Background="#0F766E" Opacity="0.3" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="CompanyMetaText" Text="" FontSize="11.5" Foreground="#64748B"
                                        HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,12,0,0"/>
                         </StackPanel>
                     </Border>
 
                     <!-- ═══ نموذج الدخول ═══ -->
-                    <Border Grid.Column="1" Background="#F7F6EE" Padding="24,28">
+                    <Border Grid.Column="1" Background="#FFFFFF" Padding="28,32">
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="تسجيل الدخول" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource ThemeTableHeaderBrush}" Margin="0,0,0,4"/>
-                            <TextBlock Text="الدخول بالرقم — كل موظف يأخذ رقماً للدخول من شاشة الموظفين" FontSize="11" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,0,0,16" TextWrapping="Wrap"/>
+                            <TextBlock Text="تسجيل الدخول" FontSize="18" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,4"/>
+                            <TextBlock Text="أدخل رقم الموظف أو اسم المستخدم للدخول" FontSize="11.5" Foreground="#64748B" Margin="0,0,0,18" TextWrapping="Wrap"/>
 
                             <TextBlock Text="رقم الدخول (أو اسم المستخدم)" Style="{StaticResource FieldLabel}"/>
-                            <TextBox x:Name="UserNameBox" TabIndex="0" Height="30" ToolTip="أدخل رقم الدخول الخاص بك — كل موظف له رقم"/>
+                            <TextBox x:Name="UserNameBox" TabIndex="0" Height="34" ToolTip="أدخل رقم الدخول الخاص بك — كل موظف له رقم"/>
 
                             <TextBlock Text="كلمة المرور" Style="{StaticResource FieldLabel}"/>
                             <Grid>
-                                <PasswordBox x:Name="PasswordBox" TabIndex="1" Height="30" KeyDown="PasswordBox_KeyDown" PasswordChanged="PasswordBox_Changed"/>
-                                <TextBox x:Name="PasswordText" TabIndex="1" Height="30" Visibility="Collapsed" TextChanged="PasswordText_Changed"/>
+                                <PasswordBox x:Name="PasswordBox" TabIndex="1" Height="34" KeyDown="PasswordBox_KeyDown" PasswordChanged="PasswordBox_Changed"/>
+                                <TextBox x:Name="PasswordText" TabIndex="1" Height="34" Visibility="Collapsed" TextChanged="PasswordText_Changed"/>
                             </Grid>
-                            <CheckBox x:Name="ShowPassChk" Content="👁 إظهار كلمة السر أثناء الكتابة" Margin="0,6,0,0" Checked="ShowPass_Toggled" Unchecked="ShowPass_Toggled"/>
+                            <CheckBox x:Name="ShowPassChk" Content="👁 إظهار كلمة السر أثناء الكتابة" Margin="0,8,0,0" Checked="ShowPass_Toggled" Unchecked="ShowPass_Toggled"/>
 
                             <CheckBox x:Name="RememberMe" Content="تذكرني على هذا الجهاز" Margin="0,12,0,0" TabIndex="2"/>
 
                             <Button x:Name="LoginBtn" Content="🔐 تسجيل الدخول" Style="{StaticResource ErpPrimaryButton}"
-                                    Margin="0,18,0,0" HorizontalAlignment="Stretch" Click="Login_Click" TabIndex="3" IsDefault="True"/>
+                                    Height="38" Margin="0,20,0,0" HorizontalAlignment="Stretch" Click="Login_Click" TabIndex="3" IsDefault="True"/>
 
                             <TextBlock x:Name="MsgText" Text="" Foreground="#DC2626" TextWrapping="Wrap" Margin="0,12,0,0"
-                                       HorizontalAlignment="Center" FontSize="11.5" TextAlignment="Center"/>
+                                       HorizontalAlignment="Center" FontSize="12" TextAlignment="Center"/>
 
-                            <!-- §v1.50.30: طوارئ المدير — بدل الطريق المسدود «راجع مسؤول النظام» حين يكون المستخدم هو المسؤول -->
+                            <!-- طوارئ المدير -->
                             <Button x:Name="EmergencyBtn" Content="🔓 فك قفل حساب المدير — طوارئ" Style="{StaticResource ErpButton}"
-                                    Margin="0,10,0,0" HorizontalAlignment="Stretch" FontSize="11.5" Click="EmergencyUnlock_Click"
+                                    Height="32" Margin="0,12,0,0" HorizontalAlignment="Stretch" FontSize="11.5" Click="EmergencyUnlock_Click"
                                     ToolTip="يفك قفل حساب المدير فوراً ويعيد كلمة المرور إلى [REDACTED-DEFAULT-CREDENTIAL]"/>
-                            <TextBlock x:Name="DbHintText" Text="" Foreground="{DynamicResource ThemeSecondaryTextBrush}" TextWrapping="Wrap" Margin="0,10,0,0"
+                            <TextBlock x:Name="DbHintText" Text="" Foreground="#64748B" TextWrapping="Wrap" Margin="0,12,0,0"
                                        HorizontalAlignment="Center" FontSize="11" TextAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -124,7 +109,7 @@
         </Border>
 
         <!-- شريط سفلي: اسم النظام والإصدار -->
-        <TextBlock Text="نظام التصنيع — النظام المتكامل لإدارة عمليات التصنيع © 2026" Foreground="{DynamicResource ThemeSecondaryTextBrush}" FontSize="11"
-                   HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12"/>
+        <TextBlock Text="نظام التصنيع — النظام المتكامل لإدارة عمليات التصنيع © 2026" Foreground="#94A3B8" FontSize="11.5"
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,14"/>
     </Grid>
 </Window>

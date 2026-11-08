@@ -9,37 +9,37 @@ public sealed class ThemeProfileDto
     public string Mode { get; set; } = "Light"; // Light | Dark | Auto
 
     // الألوان
-    public string PrimaryColor { get; set; } = "#16283C";
-    public string SecondaryColor { get; set; } = "#C9A227";
-    public string BackgroundColor { get; set; } = "#E9E6DC";
-    public string WindowBackgroundColor { get; set; } = "#E9E6DC";
-    public string TableBackgroundColor { get; set; } = "#FDFCF8";
-    public string TableHeaderColor { get; set; } = "#16283C";
-    public string TextColor { get; set; } = "#1F2937";
-    public string SecondaryTextColor { get; set; } = "#6B7280";
-    public string ButtonColor { get; set; } = "#14532D";
-    public string ButtonHoverColor { get; set; } = "#1D5B3A";
-    public string ButtonPressedColor { get; set; } = "#0F3D22";
-    public string BorderColor { get; set; } = "#B8B5A0";
-    public string SuccessColor { get; set; } = "#166534";
-    public string WarningColor { get; set; } = "#92400E";
-    public string ErrorColor { get; set; } = "#B42318";
-    public string InfoColor { get; set; } = "#0A246A";
-    public string SelectedRowColor { get; set; } = "#E8F1FA";
-    public string HoverRowColor { get; set; } = "#F4F8F3";
-    public string AlternateRowColor { get; set; } = "#FBFAF5";
-    public string CardBackgroundColor { get; set; } = "#FDFCF8";
+    public string PrimaryColor { get; set; } = "#0F172A";
+    public string SecondaryColor { get; set; } = "#2563EB";
+    public string BackgroundColor { get; set; } = "#F8FAFC";
+    public string WindowBackgroundColor { get; set; } = "#F8FAFC";
+    public string TableBackgroundColor { get; set; } = "#FFFFFF";
+    public string TableHeaderColor { get; set; } = "#1E293B";
+    public string TextColor { get; set; } = "#0F172A";
+    public string SecondaryTextColor { get; set; } = "#475569";
+    public string ButtonColor { get; set; } = "#0284C7";
+    public string ButtonHoverColor { get; set; } = "#0369A1";
+    public string ButtonPressedColor { get; set; } = "#075985";
+    public string BorderColor { get; set; } = "#CBD5E1";
+    public string SuccessColor { get; set; } = "#16A34A";
+    public string WarningColor { get; set; } = "#D97706";
+    public string ErrorColor { get; set; } = "#DC2626";
+    public string InfoColor { get; set; } = "#2563EB";
+    public string SelectedRowColor { get; set; } = "#E0F2FE";
+    public string HoverRowColor { get; set; } = "#F1F5F9";
+    public string AlternateRowColor { get; set; } = "#F8FAFC";
+    public string CardBackgroundColor { get; set; } = "#FFFFFF";
     public string InputBackgroundColor { get; set; } = "#FFFFFF";
-    public string TitleBarColor { get; set; } = "#16283C";
+    public string TitleBarColor { get; set; } = "#0F172A";
 
     // الخطوط والأحجام
     public string BodyFontFamily { get; set; } = "Segoe UI";
     public string HeadingFontFamily { get; set; } = "Segoe UI";
-    public double BaseFontSize { get; set; } = 12.5;
+    public double BaseFontSize { get; set; } = 13;
     public double PageTitleFontSize { get; set; } = 18;
     public double SectionTitleFontSize { get; set; } = 15;
-    public double TableFontSize { get; set; } = 12.5;
-    public double ButtonFontSize { get; set; } = 12;
+    public double TableFontSize { get; set; } = 13;
+    public double ButtonFontSize { get; set; } = 13;
     public bool HeadingBold { get; set; } = true;
     public bool BodyBold { get; set; } = false;
 
@@ -55,18 +55,18 @@ public sealed class ThemeProfileDto
     // الأزرار
     public string ButtonStyle { get; set; } = "Rounded"; // Square | Rounded | Flat | Border
     public double ButtonWidth { get; set; } = 0;
-    public double ButtonHeight { get; set; } = 30;
+    public double ButtonHeight { get; set; } = 34;
     public double IconSize { get; set; } = 14;
     public string IconPosition { get; set; } = "Before"; // Before | After | Above | None
     public string ButtonTextColor { get; set; } = "#FFFFFF";
 
     // الجداول والنوافذ
-    public double RowHeight { get; set; } = 32;
+    public double RowHeight { get; set; } = 36;
     public bool ShowTableBorders { get; set; } = true;
     public bool ShowColumnDividers { get; set; } = true;
     public string TableTextAlignment { get; set; } = "Right";
     public bool ShowPagination { get; set; } = true;
-    public double TitleBarHeight { get; set; } = 34;
+    public double TitleBarHeight { get; set; } = 38;
     public double ContentWidth { get; set; } = 0;
     public string SidebarStyle { get; set; } = "Classic";
     public double SidebarWidth { get; set; } = 250;
