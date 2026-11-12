@@ -16,15 +16,16 @@ public sealed class ActualProductionRow : INotifyPropertyChanged, IDataErrorInfo
         Source = source;
         _historical = recorded && !continuation;
         _continuation = continuation;
-        // في جلسة الاستكمال تبقى الكمية السابقة ظاهرة منفصلة، ويبدأ إدخال الجلسة الجديدة فارغاً.
-        _actual = _historical ? source.ActualCartons.ToString(CultureInfo.InvariantCulture) : "";
+        // عند استكمال أمر جزئي ينزل المتبقي غير المسلّم تلقائياً وليس كامل أمر الإنتاج
+        int defaultQty = _historical ? source.ActualCartons : Math.Max(0, source.PlannedCartons - (_continuation ? source.ActualCartons : 0));
+        _actual = defaultQty.ToString(CultureInfo.InvariantCulture);
     }
     public string Customer => Source.Customer;
     public string Product => Source.Product;
     public string Unit => Source.Unit;
-    public int Planned => Source.PlannedCartons;
+    public int Planned => _continuation ? RemainingBefore : Source.PlannedCartons;
     public int PreviouslyProduced => _continuation ? Source.ActualCartons : 0;
-    public int RemainingBefore => Math.Max(0, Planned - PreviouslyProduced);
+    public int RemainingBefore => Math.Max(0, Source.PlannedCartons - (_continuation ? Source.ActualCartons : 0));
     public double RawMaterialBasisKg => Source.RawMaterialBasisKg > 0 ? Source.RawMaterialBasisKg : Source.PlannedQtyKg;
     private int? _warehouseId;
     public int? WarehouseId { get => _warehouseId; set { if (_warehouseId == value) return; _warehouseId = value; Changed(nameof(WarehouseId)); } }
@@ -33,19 +34,19 @@ public sealed class ActualProductionRow : INotifyPropertyChanged, IDataErrorInfo
     private string _actual;
     public string Actual { get => _actual; set { _actual = value; Changed(nameof(Actual)); Changed(nameof(Difference)); Changed(nameof(DiffState)); Changed(nameof(Error)); } }
     /// <summary>حالة الفرق للتلوين الصريح — اكتمال المخطط، نقص، أو إدخال غير صالح.</summary>
-    public string DiffState { get { if (!TryQuantity(out var q)) return "invalid"; return Planned - PreviouslyProduced - q == 0 ? "match" : "gap"; } }
+    public string DiffState { get { if (!TryQuantity(out var q)) return "invalid"; return RemainingBefore - q == 0 ? "match" : "gap"; } }
     public bool TryQuantity(out int quantity)
     {
         if (_historical)
         {
             quantity = Source.ActualCartons;
-            return quantity >= 0 && quantity <= Planned;
+            return quantity >= 0 && quantity <= Source.PlannedCartons;
         }
         return int.TryParse(Normalize(Actual), NumberStyles.Integer, CultureInfo.CurrentCulture, out quantity)
             && quantity >= 0 && quantity <= RemainingBefore;
     }
     public string Difference => TryQuantity(out var q)
-        ? (Planned - PreviouslyProduced - q).ToString(CultureInfo.CurrentCulture) : "—";
+        ? (RemainingBefore - q).ToString(CultureInfo.CurrentCulture) : "—";
     public string Error => TryQuantity(out _) ? ""
         : $"أدخل كراتين جلسة صحيحة بين صفر والمتبقي ({RemainingBefore:N0})؛ الخانة لا تُملأ تلقائيًا.";
     public string this[string name] => name == nameof(Actual) ? Error : "";

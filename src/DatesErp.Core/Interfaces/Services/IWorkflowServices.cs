@@ -1326,7 +1326,7 @@ public interface IInspectionService
     // ── §v1.50.28: التدفق المعتمد — الفحص ينزل مباشرة من تسليم الإنتاج ──
 
     /// <summary>تسليمات الإنتاج المكتملة (كل أصنافها المنتَجة بكمياتها وصفاتها المسموحة) — لا قوائم مقصوصة.</summary>
-    List<QualitySourceDto> GetDeliverySources();
+    List<QualitySourceDto> GetDeliverySources(bool includeAllHistoricalChecks = false);
 
     /// <summary>
     /// حفظ فحص التسليم: صفة أو أكثر لكل صنف (سليم/منسم… — صفات لا أصناف جديدة)،

@@ -148,7 +148,7 @@ public partial class QualityView : UserControl
         try
         {
             ErrorLog.WriteInfo($"Quality.Load STEP=ENTER KeepOrderId={keepOrderId?.ToString() ?? "<null>"}");
-            var sources = await Task.Run(() => WithInsp(s => s.GetDeliverySources()));
+            var sources = await Task.Run(() => WithInsp(s => s.GetDeliverySources(true)));
             if (generation != _loadGeneration) return;
 
             _sources = sources ?? new List<QualitySourceDto>();
@@ -239,7 +239,41 @@ public partial class QualityView : UserControl
         Load();
     }
 
-    private void SearchSources_Click(object sender, RoutedEventArgs e) => OpenQualitySearch(SourceSearchBox.Text);
+    private void SearchSources_Click(object sender, RoutedEventArgs e)
+    {
+        var term = ScreenSearch.Normalize(SourceSearchBox.Text ?? "");
+        if (term.Length == 0)
+        {
+            OpenQualitySearch(null);
+            return;
+        }
+        var pool = _sources?.Count > 0 ? _sources : (WithInsp(s => s.GetDeliverySources(true)) ?? new List<QualitySourceDto>());
+        var matches = pool.Where(src =>
+            ScreenSearch.Normalize(src.Label).Contains(term)
+            || ScreenSearch.Normalize(src.OrderNumber).Contains(term)
+            || ScreenSearch.Normalize(src.CheckNumber).Contains(term)
+            || ScreenSearch.Normalize(src.OrderId.ToString()).Contains(term)
+            || (src.Items ?? new List<QualitySourceItemDto>()).Any(item =>
+                ScreenSearch.Normalize(item.ProductName).Contains(term)
+                || ScreenSearch.Normalize(item.CustomerName).Contains(term))).ToList();
+        if (matches.Count == 0)
+        {
+            OpenQualitySearch(SourceSearchBox.Text);
+        }
+        else if (matches.Count == 1)
+        {
+            _newMode = false;
+            _editMode = false;
+            SourceBox.ItemsSource = pool;
+            SourceBox.SelectedItem = matches[0];
+            Source_Changed(SourceBox, new SelectionChangedEventArgs(ComboBox.SelectionChangedEvent,
+                new List<object>(), new List<object> { matches[0] }));
+        }
+        else
+        {
+            OpenQualitySearch(SourceSearchBox.Text);
+        }
+    }
 
     private void OpenQualitySearch(string initialTerm = null)
     {
@@ -249,7 +283,7 @@ public partial class QualityView : UserControl
             var win = new DocSearchWindow("مصادر ومحاضر الجودة",
                 new List<SearchFieldDef> { new() { Key = "term", LabelAr = "رقم الأمر أو العميل أو الصنف أو محضر الفحص", DefaultValue = initialTerm } }, filters =>
                 {
-                    _sources = WithInsp(s => s.GetDeliverySources()) ?? new List<QualitySourceDto>();
+                    _sources = WithInsp(s => s.GetDeliverySources(true)) ?? new List<QualitySourceDto>();
                     var term = ScreenSearch.Normalize(filters.GetValueOrDefault("term") ?? "");
                     matches = _sources.Where(src => string.IsNullOrEmpty(term)
                         || ScreenSearch.Normalize(src.Label).Contains(term)
@@ -262,10 +296,10 @@ public partial class QualityView : UserControl
                         .ToList();
                     return new SearchResult
                     {
-                        Columns = new List<string> { "رقم أمر الإنتاج", "المصدر", "رقم محضر الفحص", "حالة الفحص", "الاعتماد", "عدد البنود", "الكمية المنتجة (كرتون)" },
+                        Columns = new List<string> { "رقم أمر الإنتاج", "المصدر / المحضر", "رقم محضر الفحص", "حالة الفحص", "الاعتماد", "عدد البنود", "الكمية (كرتون)" },
                         Rows = matches.Select((src, index) => (index + 1, new object[]
                         {
-                            src.OrderNumber, src.Label, src.CheckNumber ?? "—", src.CheckStatus ?? "—",
+                            src.OrderNumber ?? "—", src.Label, src.CheckNumber ?? "—", QualityCheckStatuses.ToArabic(src.CheckStatus),
                             src.CheckApproved ? "معتمد" : src.HasInspectionResults ? "محفوظ" : "غير مفحوص",
                             src.Items?.Count ?? 0, src.TotalProducedCartons
                         })).ToList()

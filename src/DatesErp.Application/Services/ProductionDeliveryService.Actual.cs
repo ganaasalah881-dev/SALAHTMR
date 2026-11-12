@@ -19,15 +19,22 @@ public partial class ProductionDeliveryService
     public List<ActualByProductDefinitionDto> GetActualByProducts()
     {
         if (Session == null || !Session.Can("production", "View")) throw new PermissionDeniedException("عرض الإنتاج");
-        var definitions = Db.ByProducts.AsNoTracking().Where(b => b.IsActive).OrderBy(b => b.Id).ToList()
-            .Where(b => IsKilogramUnit(b.UnitOfMeasure)).ToList();
-        var stockProductIds = definitions.Where(b => b.ProductId != null).Select(b => b.ProductId.Value).Distinct().ToList();
-        var validStockIds = Db.Products.AsNoTracking()
-            .Where(p => stockProductIds.Contains(p.Id) && p.IsActive && p.ItemType == "ByProduct"
-                && p.GroupCode == UnitsPolicy.GroupByProduct && p.UnitOfMeasure == UnitsPolicy.UnitKg)
-            .Select(p => p.Id).ToHashSet();
-        return definitions.Where(b => b.ProductId is int productId && validStockIds.Contains(productId))
-            .Select(b => new ActualByProductDefinitionDto { Id = b.Id, Name = b.ByProductNameAr, Unit = "كجم" }).ToList();
+        var definitions = Db.ByProducts.AsNoTracking().Where(b => b.IsActive).OrderBy(b => b.Id).ToList();
+        if (definitions.Count > 0)
+        {
+            return definitions.Select(b => new ActualByProductDefinitionDto
+            {
+                Id = b.Id,
+                Name = b.ByProductNameAr,
+                Unit = string.IsNullOrWhiteSpace(b.UnitOfMeasure) ? "كجم" : b.UnitOfMeasure
+            }).ToList();
+        }
+
+        return Db.Products.AsNoTracking()
+            .Where(p => p.IsActive && (p.ItemType == "ByProduct" || p.GroupCode == UnitsPolicy.GroupByProduct))
+            .OrderBy(p => p.Id)
+            .Select(p => new ActualByProductDefinitionDto { Id = p.Id, Name = p.ProductNameAr, Unit = "كجم" })
+            .ToList();
     }
 
     public List<WarehouseOptionDto> GetProductionDeliveryWarehouses()
@@ -464,8 +471,8 @@ public partial class ProductionDeliveryService
                 bool omittedSource = byProduct.SourceOrderItemId == null && byProduct.RawProductId == null && byProduct.RawLotId == null && byProduct.CustomerId == null;
                 if (omittedSource)
                 {
-                    if (sourceRows.Count != 1)
-                        throw new DomainException("اربط كل مخرج ثانوي ببند الخام والعميل/الدفعة؛ اختر المصدر في سطر المخرج.");
+                    if (sourceRows.Count == 0)
+                        throw new DomainException("لا توجد بنود خام مرتبطة بأمر الإنتاج لتخصيص المخرج الثانوي.");
                     byProduct.SourceOrderItemId = sourceRows[0].SourceOrderItemId;
                     byProduct.RawProductId = sourceRows[0].RawProductId;
                     byProduct.RawLotId = sourceRows[0].RawLotId;

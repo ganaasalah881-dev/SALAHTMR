@@ -141,6 +141,13 @@ public partial class ProductionDeliveryView : UserControl
             if (selectedDeliveryId is > 0)
             {
                 var deliv = _deliveries.FirstOrDefault(d => d.Id == selectedDeliveryId.Value);
+                if (deliv == null)
+                {
+                    // قد يكون أمر التسليم خارج القائمة المبسّطة (مكتمل أو قديم) — اجلبه مباشرة
+                    var directCard = WithService(s => s.GetDelivery(selectedDeliveryId.Value));
+                    if (directCard != null) _deliveries.Insert(0, new ProductionDeliveryCard { Id = directCard.Id, OrderId = directCard.OrderId, DocumentNumber = directCard.DocumentNumber, Status = directCard.Status, StatusAr = directCard.StatusAr });
+                    deliv = _deliveries.FirstOrDefault(d => d.Id == selectedDeliveryId.Value);
+                }
                 if (deliv != null)
                 {
                     OrderBox.ItemsSource = _orders;
@@ -289,8 +296,8 @@ public partial class ProductionDeliveryView : UserControl
             _currentDelivery = card;
             _currentOrder = _orders.FirstOrDefault(o => o.OrderId == card.OrderId)
                 ?? _orders.FirstOrDefault(o => o.ProductionDeliveryId == card.Id);
-            if (_currentOrder == null && card.OrderId is int oid)
-                _currentOrder = WithService(s => s.GetActualDeliveryOrders((int?)oid)).FirstOrDefault(o => o.OrderId == oid);
+            if (_currentOrder == null && card.OrderId is int wantedId)
+                _currentOrder = WithService(s => s.GetActualDeliveryOrders((int?)wantedId)).FirstOrDefault(o => o.OrderId == wantedId);
 
             OrderBox.SelectedItem = _currentOrder != null ? _orders.FirstOrDefault(o => o.OrderId == _currentOrder.OrderId) : null;
             if (DatesErp.Core.Common.UiFormat.TryParseDate(card.DeliveryDate, out var dt))
@@ -392,8 +399,11 @@ public partial class ProductionDeliveryView : UserControl
             }
         }
 
-        if (canRecord && _activeDefinitions.Count > 0 && _secondary.Count == 0)
-            _secondary.Add(new ActualSecondaryRow());
+        if (canRecord && _secondary.Count == 0)
+        {
+            if (_activeDefinitions.Count > 0)
+                _secondary.Add(new ActualSecondaryRow());
+        }
         RefreshSecondarySummary();
 
         ActualColumn.Header = continuation ? "فعلي الجلسة ✏️" : "المنتج فعليًا ✏️";
@@ -503,6 +513,8 @@ public partial class ProductionDeliveryView : UserControl
     private void Save_Click(object sender, RoutedEventArgs e)
     {
         if (_saving) return;
+        // تعطيل زر الحفظ فور بدء الحفظ لمنع التكرار
+        SaveButton.IsEnabled = false;
         try
         {
             ItemsGrid.CommitEdit(DataGridEditingUnit.Cell, true);
@@ -612,6 +624,7 @@ public partial class ProductionDeliveryView : UserControl
                 string finalMsg = saveRes.Message + deliveryNote;
                 StatusLabel.Text = finalMsg.Replace("\n", " — ");
                 _notifyInfo(finalMsg);
+                SaveButton.IsEnabled = false; // بعد الحفظ الناجح يُعطّل الزر حتى لا يُعاد الإرسال
                 return;
             }
 
@@ -635,6 +648,7 @@ public partial class ProductionDeliveryView : UserControl
                 ApplyWarehouseChoicesToDraft(draftRes.Id, delivDate, NotesBox.Text, whMap);
                 LoadData(_currentOrder.OrderId, draftRes.Id);
                 _notifyInfo(draftRes.Message);
+                SaveButton.IsEnabled = false; // تم إنشاء المسودة — أعد التفعيل عبر UpdateActionButtons
                 return;
             }
 
@@ -677,6 +691,8 @@ public partial class ProductionDeliveryView : UserControl
         finally
         {
             _saving = false;
+            // أعد تقييم حالة الزر بعد انتهاء العملية (نجاحاً أو فشلاً)
+            UpdateActionButtons();
         }
     }
 

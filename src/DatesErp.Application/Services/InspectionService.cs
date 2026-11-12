@@ -606,6 +606,9 @@ public class InspectionService : ServiceBase, IInspectionService
             || string.Equals((name ?? "").Trim(), "خرج تام مطابق", StringComparison.Ordinal);
 
     public List<QualitySourceDto> GetDeliverySources()
+        => GetDeliverySources(false);
+
+    public List<QualitySourceDto> GetDeliverySources(bool includeAllHistoricalChecks)
     {
         Require("quality", "View");
         // مصدر الجودة هو التنفيذ الفعلي المكتمل فقط. نختار آخر تنفيذ مقفل لكل أمر
@@ -813,6 +816,86 @@ public class InspectionService : ServiceBase, IInspectionService
                         : " — بلا فحص");
             result.Add(src);
         }
+
+        if (includeAllHistoricalChecks)
+        {
+            try
+            {
+                var existingCheckIds = result.Where(r => r.CheckId != null).Select(r => r.CheckId.Value).ToHashSet();
+                var historicalChecks = Db.QualityChecks.AsNoTracking()
+                    .Include(c => c.Items)
+                    .Where(c => c.Status != DocStatuses.Cancelled && !existingCheckIds.Contains(c.Id))
+                    .OrderByDescending(c => c.Id)
+                    .ToList();
+
+                if (historicalChecks.Count > 0)
+                {
+                    var hOrderIds = historicalChecks.Where(c => c.OrderId != null).Select(c => c.OrderId.Value).Distinct().ToList();
+                    var hOrders = Db.ProductionOrders.AsNoTracking().Where(o => hOrderIds.Contains(o.Id)).ToDictionary(o => o.Id);
+                    var hProductIds = historicalChecks.SelectMany(c => c.Items.Select(i => i.ProductId)).Distinct().ToList();
+                    var hProducts = Db.Products.AsNoTracking().Where(p => hProductIds.Contains(p.Id)).ToDictionary(p => p.Id, p => p.ProductNameAr);
+                    var hCustomerIds = historicalChecks.SelectMany(c => c.Items.Where(i => i.CustomerId != null).Select(i => i.CustomerId.Value))
+                        .Concat(hOrders.Values.Where(o => o.CustomerId != null).Select(o => o.CustomerId.Value)).Distinct().ToList();
+                    var hCustomers = Db.Customers.AsNoTracking().Where(c => hCustomerIds.Contains(c.Id)).ToDictionary(c => c.Id, c => c.CustomerName);
+                    var hLotIds = historicalChecks.SelectMany(c => c.Items.Where(i => i.LotId != null).Select(i => i.LotId.Value)).Distinct().ToList();
+                    var hLots = Db.Lots.AsNoTracking().Where(l => hLotIds.Contains(l.Id)).ToDictionary(l => l.Id, l => l.LotCode);
+
+                    foreach (var chk in historicalChecks)
+                    {
+                        hOrders.TryGetValue(chk.OrderId ?? 0, out var hOrd);
+                        string orderDoc = hOrd?.DocumentNumber ?? (chk.OrderId != null ? $"أمر #{chk.OrderId}" : "بدون أمر");
+                        var items = new List<QualitySourceItemDto>();
+                        foreach (var it in chk.Items)
+                        {
+                            int? cid = it.CustomerId ?? hOrd?.CustomerId;
+                            string custName = cid != null && hCustomers.TryGetValue(cid.Value, out var cn) ? cn : "غير محدد";
+                            string prodName = hProducts.GetValueOrDefault(it.ProductId, $"صنف #{it.ProductId}");
+                            string lotCode = it.LotId != null && hLots.TryGetValue(it.LotId.Value, out var lc) ? lc : "—";
+                            int cartons = (int)(it.CheckedCartons > 0 ? it.CheckedCartons : it.AcceptedCartons + it.RejectedCartons);
+                            var grades = gradesByProduct.TryGetValue(it.ProductId, out var pg) ? pg.ToList() : new List<AllowedResultType>();
+                            if (legacyGradesByCheckItem.TryGetValue((chk.Id, it.ProductId), out var hGrades))
+                                grades.AddRange(hGrades.Where(h => grades.All(g => g.ResultTypeId != h.ResultTypeId)));
+
+                            items.Add(new QualitySourceItemDto
+                            {
+                                OrderItemId = it.OrderItemId ?? 0,
+                                ProductId = it.ProductId,
+                                LotId = it.LotId,
+                                ProducedCartons = cartons,
+                                ProductName = prodName,
+                                LotCode = lotCode,
+                                CustomerName = custName,
+                                CartonWeightKg = SafeCartonWeight(it.ProductId, it.PackagingTypeId),
+                                AllowedGrades = grades
+                            });
+                        }
+
+                        int totalCartons = (int)(chk.TotalCheckedCartons > 0 ? chk.TotalCheckedCartons : items.Sum(i => i.ProducedCartons));
+                        string custSummary = items.Select(i => i.CustomerName).FirstOrDefault(n => !string.IsNullOrWhiteSpace(n)) ?? "عام";
+
+                        result.Add(new QualitySourceDto
+                        {
+                            OrderId = chk.OrderId ?? 0,
+                            ExecutionId = chk.ExecutionId ?? 0,
+                            OrderNumber = orderDoc,
+                            CheckId = chk.Id,
+                            CheckNumber = chk.DocumentNumber ?? chk.Id.ToString(),
+                            CheckStatus = chk.Status,
+                            CheckApproved = chk.IsApproved,
+                            HasInspectionResults = true,
+                            TotalProducedCartons = totalCartons,
+                            Items = items,
+                            Label = $"محضر فحص {chk.DocumentNumber ?? chk.Id.ToString()} — {orderDoc} — {custSummary} — {QualityCheckStatuses.ToArabic(chk.Status)}"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[InspectionService.Historical] {ex.Message}");
+            }
+        }
+
         // القابلة للفحص أولاً: بلا فحص معتمد.
         return result.OrderBy(s2 => s2.CheckApproved).ThenByDescending(s2 => s2.OrderId).ToList();
     }

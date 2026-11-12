@@ -69,7 +69,6 @@ public static class ScreenCatalog
 
         // 🚚 التسليم والشحن
         new("finishedgoods", "التسليم والشحن", "تسليم الإنتاج (مخزن التام)", "finishedgoods", "📦", "MRPMPS1015"),
-        new("delivery-shipping", "التسليم والشحن", "تسليم العملاء", "delivery", "🚛", "MRPINV1005"),
         new("avail", "التسليم والشحن", "متاح العملاء", "delivery", "📦", "MRPDLV1002"),   // §B102.1 (إصلاح فحص): نقطة دخول ميزة B100
 
         // 📈 التقارير
