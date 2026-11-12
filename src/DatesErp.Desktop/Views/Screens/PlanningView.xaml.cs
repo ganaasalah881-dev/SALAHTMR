@@ -1975,8 +1975,8 @@ public partial class PlanningView : UserControl
             var db = scope.ServiceProvider.GetRequiredService<DatesErpDbContext>();
             var model = Views.PlanningPrintModel.Load(db, _currentPlanId.Value);
             if (model == null) { AppContainer.Get<DialogService>().Error("تعذر تحميل بيانات الخطة للطباعة."); return; }
-            var doc = Views.PlanningPrintDocument.Build(model);
-            var preview = new Views.PrintPreviewWindow(doc, $"خطة الإنتاج {model.PlanNumber} — {model.Title}")
+            var phaseModel = Printing.PlanningPrintDesign.Create(model);
+            var preview = new Views.PrintPreviewWindow(phaseModel, $"خطة الإنتاج {model.PlanNumber} — {model.Title}")
             { Owner = Window.GetWindow(this) };
             preview.ShowDialog();
         }

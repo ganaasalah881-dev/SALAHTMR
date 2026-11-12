@@ -655,8 +655,8 @@ public partial class ReceivingView : UserControl
             var db = scope.ServiceProvider.GetRequiredService<DatesErpDbContext>();
             var model = Views.ReceivingPrintModel.Load(db, _currentId);
             if (model == null) { AppContainer.Get<DialogService>().Error("تعذر تحميل بيانات السند للطباعة."); return; }
-            var doc = Views.ReceivingPrintDocument.Build(model);
-            var preview = new Views.PrintPreviewWindow(doc, $"سند استلام {model.DocumentNumber}") { Owner = Window.GetWindow(this) };
+            var phaseModel = Printing.ReceivingPrintDesign.Create(model);
+            var preview = new Views.PrintPreviewWindow(phaseModel, $"سند استلام {model.DocumentNumber}") { Owner = Window.GetWindow(this) };
             preview.ShowDialog();
         }
         catch (Exception ex) { AppContainer.Get<DialogService>().HandleException(ex, "Receiving.Print"); }
