@@ -195,9 +195,9 @@
             <!-- ⑤ منطقة العمل الوسطى: جدول أوامر اليوم + بطاقة تفاصيل الأمر تحته في نفس الشاشة -->
             <Grid Margin="12,10,12,8">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" MinHeight="230"/>
+                    <RowDefinition Height="1*" MinHeight="180"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1.4*" MinHeight="250"/>
                 </Grid.RowDefinitions>
 
                 <DataGrid x:Name="TodayGrid" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True"

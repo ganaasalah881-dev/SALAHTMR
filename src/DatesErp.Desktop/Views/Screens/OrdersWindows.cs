@@ -161,7 +161,11 @@ public class OrderDocumentPanel : UserControl
         dock.Children.Add(new ScrollViewer { Content = body, VerticalScrollBarVisibility = ScrollBarVisibility.Auto });
         Content = dock;
 
-        if (orderId > 0) Loaded += (_, _) => Refresh();
+        if (orderId > 0)
+        {
+            Refresh();
+            Loaded += (_, _) => Refresh();
+        }
     }
 
     private static TextBlock Lbl(string t) => new() { Text = t, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 6, 0), FontSize = 11.5 };

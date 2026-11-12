@@ -32,9 +32,9 @@ public class DocSearchWindow : Window
     public int? SelectedId { get; private set; }
 
     private readonly List<(SearchFieldDef def, FrameworkElement input)> _fields = new();
-    private readonly DataGrid _grid = new() { Height = 380, RowHeight = 32, CanUserSortColumns = true };
-    private readonly TextBox _quickSearchBox = new() { Width = 280, ToolTip = "بحث سريع في كل أعمدة النتائج" };
-    private readonly TextBlock _state = new() { FontSize = 12, Margin = new Thickness(0, 6, 0, 0), Foreground = System.Windows.Media.Brushes.Gray };
+    private readonly DataGrid _grid = new() { CanUserSortColumns = true };
+    private readonly TextBox _quickSearchBox = new() { Width = 320, Height = 32, ToolTip = "بحث سريع في كل أعمدة النتائج" };
+    private readonly TextBlock _state = new() { FontSize = 12.5, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 8), Foreground = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#0F766E") };
     private readonly Func<Dictionary<string, string>, SearchResult> _search;
     private List<(int id, object[] cells)> _allRows = new();
     private List<(int id, object[] cells)> _rows = new();
@@ -42,11 +42,11 @@ public class DocSearchWindow : Window
     public DocSearchWindow(string title, List<SearchFieldDef> filters, Func<Dictionary<string, string>, SearchResult> search)
     {
         _search = search;
-        Title = $"🔍 بحث — {title}";
-        Width = 1000; MinWidth = 760; MinHeight = 420; SizeToContent = SizeToContent.Height;
+        Title = $"🔍 بحث واستعلام — {title}";
+        Width = 1180; Height = 700; MinWidth = 900; MinHeight = 550;
         FlowDirection = FlowDirection.RightToLeft;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#F1F5F9");
+        Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#F8FAFC");
 
         var filtersPanel = new WrapPanel();
         foreach (var f in filters)
@@ -54,8 +54,8 @@ public class DocSearchWindow : Window
             FrameworkElement input = f.Kind switch
             {
                 "combo" => BuildCombo(f),
-                "date" => new DatePicker { Width = 130 },
-                _ => new TextBox { Width = 160 }
+                "date" => new DatePicker { Width = 140, Height = 32 },
+                _ => new TextBox { Width = 200, Height = 32 }
             };
             if (!string.IsNullOrWhiteSpace(f.DefaultValue))
             {
@@ -68,35 +68,33 @@ public class DocSearchWindow : Window
                 else if (input is DatePicker dp && DateTime.TryParse(f.DefaultValue, out var date)) dp.SelectedDate = date;
             }
             _fields.Add((f, input));
-            var sp = new StackPanel { Margin = new Thickness(0, 0, 14, 6) };
-            sp.Children.Add(new TextBlock { Text = f.LabelAr + ":", FontWeight = FontWeights.Bold, FontSize = 11.5, Margin = new Thickness(0, 0, 0, 2) });
+            var sp = new StackPanel { Margin = new Thickness(0, 0, 16, 8) };
+            sp.Children.Add(new TextBlock { Text = f.LabelAr + ":", FontWeight = FontWeights.Bold, FontSize = 12, Foreground = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#1E293B"), Margin = new Thickness(0, 0, 0, 4) });
             sp.Children.Add(input);
             filtersPanel.Children.Add(sp);
         }
 
-        // §B84/K1: Enter يبحث وEscape يغلق.
-        // §B110: حشوات مضمّنة مزالة (الثيم الموحد) + الفتح إجراء رئيسي كحلي + نمط للمحايدين
-        var searchBtn = new Button { Content = "🔍 بحث", IsDefault = true };
+        var searchBtn = new Button { Content = "🔍 بحث", IsDefault = true, Height = 34, Padding = new Thickness(16, 0, 16, 0) };
         searchBtn.Style = (Style)System.Windows.Application.Current.FindResource("ErpPrimaryButton");
         searchBtn.Click += (_, _) => RunSearch();
-        var allBtn = new Button { Content = "📋 عرض الكل", Margin = new Thickness(6, 0, 0, 0) };
+        var allBtn = new Button { Content = "📋 عرض الكل", Height = 34, Margin = new Thickness(8, 0, 0, 0), Padding = new Thickness(14, 0, 14, 0) };
         allBtn.Style = (Style)System.Windows.Application.Current.FindResource("ErpButton");
         allBtn.Click += (_, _) => { foreach (var (_, inp) in _fields) ClearInput(inp); _quickSearchBox.Clear(); RunSearch(); };
-        var refreshBtn = new Button { Content = "🔄 تحديث", Margin = new Thickness(6, 0, 0, 0) };
+        var refreshBtn = new Button { Content = "🔄 تحديث", Height = 34, Margin = new Thickness(8, 0, 0, 0), Padding = new Thickness(14, 0, 14, 0) };
         refreshBtn.Style = (Style)System.Windows.Application.Current.FindResource("ErpButton");
         refreshBtn.Click += (_, _) => RunSearch();
-        var openBtn = new Button { Content = "📂 فتح المحدد", Margin = new Thickness(6, 0, 0, 0) };
+        var openBtn = new Button { Content = "📂 فتح المحدد", Height = 34, Margin = new Thickness(8, 0, 0, 0), Padding = new Thickness(18, 0, 18, 0) };
         openBtn.Style = (Style)System.Windows.Application.Current.FindResource("ErpPrimaryButton");
         openBtn.Click += (_, _) => OpenSelected();
-        var closeBtn = new Button { Content = "✖ إغلاق", Margin = new Thickness(6, 0, 0, 0), IsCancel = true };
+        var closeBtn = new Button { Content = "✖ إغلاق", Height = 34, Margin = new Thickness(8, 0, 0, 0), IsCancel = true, Padding = new Thickness(14, 0, 14, 0) };
         closeBtn.Style = (Style)System.Windows.Application.Current.FindResource("ErpButton");
         closeBtn.Click += (_, _) => Close();
 
-        var btns = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 0) };
-        var firstBtn = new Button { Content = "الأول", Margin = new Thickness(6, 0, 0, 0) };
-        var prevBtn = new Button { Content = "السابق", Margin = new Thickness(3, 0, 0, 0) };
-        var nextBtn = new Button { Content = "التالي", Margin = new Thickness(3, 0, 0, 0) };
-        var lastBtn = new Button { Content = "الأخير", Margin = new Thickness(3, 0, 0, 0) };
+        var btns = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        var firstBtn = new Button { Content = "الأول", Height = 34, Margin = new Thickness(12, 0, 0, 0), Padding = new Thickness(10, 0, 10, 0) };
+        var prevBtn = new Button { Content = "السابق", Height = 34, Margin = new Thickness(4, 0, 0, 0), Padding = new Thickness(10, 0, 10, 0) };
+        var nextBtn = new Button { Content = "التالي", Height = 34, Margin = new Thickness(4, 0, 0, 0), Padding = new Thickness(10, 0, 10, 0) };
+        var lastBtn = new Button { Content = "الأخير", Height = 34, Margin = new Thickness(4, 0, 0, 0), Padding = new Thickness(10, 0, 10, 0) };
         foreach (var nav in new[] { firstBtn, prevBtn, nextBtn, lastBtn })
             nav.Style = (Style)System.Windows.Application.Current.FindResource("ErpButton");
         firstBtn.Click += (_, _) => Navigate(0);
@@ -110,24 +108,61 @@ public class DocSearchWindow : Window
         _quickSearchBox.TextChanged += (_, _) => ApplyQuickSearch();
         _grid.MouseDoubleClick += (_, _) => OpenSelected();
 
-        var quickPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 6, 0, 0) };
-        quickPanel.Children.Add(new TextBlock { Text = "بحث سريع في النتائج:", FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) });
+        var quickPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
+        quickPanel.Children.Add(new TextBlock { Text = "بحث سريع في النتائج:", FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 8, 0) });
         quickPanel.Children.Add(_quickSearchBox);
 
-        var panel = new StackPanel { Margin = new Thickness(12) };
-        panel.Children.Add(new TextBlock
+        var topCard = new Border
         {
-            Text = "أدخل شروط البحث ثم اضغط بحث — أو اضغط عرض الكل لعرض جميع المستندات المتاحة حسب صلاحيتك. نقرتان متتاليتان على أي مستند تفتحانه في الواجهة الرئيسية.",
-            FontSize = 11.5, Foreground = System.Windows.Media.Brushes.Gray, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8)
-        });
-        panel.Children.Add(filtersPanel);
-        panel.Children.Add(btns);
-        panel.Children.Add(quickPanel);
-        panel.Children.Add(_state);
-        panel.Children.Add(_grid);
-        Content = panel;
+            Background = System.Windows.Media.Brushes.White,
+            BorderBrush = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#E2E8F0"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(16, 14, 16, 14),
+            Margin = new Thickness(0, 0, 0, 12)
+        };
+        var topStack = new StackPanel();
+        topStack.Children.Add(filtersPanel);
+        var actionRow = new DockPanel { Margin = new Thickness(0, 6, 0, 0) };
+        DockPanel.SetDock(quickPanel, Dock.Right);
+        actionRow.Children.Add(quickPanel);
+        actionRow.Children.Add(btns);
+        topStack.Children.Add(actionRow);
+        topCard.Child = topStack;
 
-        Loaded += (_, _) => RunSearch(); // §7: بحث بدون شروط = كل المستندات المتاحة
+        var gridCard = new Border
+        {
+            Background = System.Windows.Media.Brushes.White,
+            BorderBrush = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#E2E8F0"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(0)
+        };
+        var gridDock = new DockPanel();
+        var statusBar = new Border
+        {
+            Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#F1F5F9"),
+            Padding = new Thickness(14, 8, 14, 8),
+            CornerRadius = new CornerRadius(8, 8, 0, 0),
+            BorderBrush = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#E2E8F0"),
+            BorderThickness = new Thickness(0, 0, 0, 1)
+        };
+        statusBar.Child = _state;
+        DockPanel.SetDock(statusBar, Dock.Top);
+        gridDock.Children.Add(statusBar);
+        gridDock.Children.Add(_grid);
+        gridCard.Child = gridDock;
+
+        var mainGrid = new Grid { Margin = new Thickness(16) };
+        mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        Grid.SetRow(topCard, 0);
+        Grid.SetRow(gridCard, 1);
+        mainGrid.Children.Add(topCard);
+        mainGrid.Children.Add(gridCard);
+        Content = mainGrid;
+
+        Loaded += (_, _) => RunSearch(); // بحث بدون شروط = كل المستندات المتاحة
     }
 
     private static ComboBox BuildCombo(SearchFieldDef f)

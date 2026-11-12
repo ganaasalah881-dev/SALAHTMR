@@ -71,14 +71,8 @@ public partial class MainWindow : Window
         // §45 — حالة الجلسة: يُستأنف من آخر شاشة فتحها المستخدم إن بقيت مسموحة له.
         Loaded += (_, _) =>
         {
-            var last = Services.ScreenStateStore.Get("lastScreen:" + Environment.UserName);
-            var initial = !string.IsNullOrEmpty(last) && MayOpen(last)
-                ? last
-                : (MayOpen("mytasks") ? "mytasks" : "dashboard");
-            // عند استئناف شاشة سابقة من جلسة قديمة تكون لوحة النظام هي الصفحة
-            // السابقة المنطقية الأولى، من دون عرضها ثم إعادة رسمها.
-            if (initial != "dashboard") _navigationHistory.Add("dashboard");
-            NavigateTo(initial, recordHistory: false, resetHomeHistory: false);
+            // الافتراضي عند فتح النظام هو لوحة التحكم الرئيسية (dashboard) دائماً
+            NavigateTo("dashboard", recordHistory: false, resetHomeHistory: true);
         };
     }
 
