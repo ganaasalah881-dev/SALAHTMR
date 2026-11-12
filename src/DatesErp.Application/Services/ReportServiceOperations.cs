@@ -228,7 +228,7 @@ public partial class ReportService
                 var r = new ReportResult
                 {
                     TitleAr = "حركات التوريد التفصيلية — كل بند استلام بوحدته الأصلية وكميته القياسية (كجم)",
-                    Columns = new List<string> { "سند الاستلام", "التاريخ", "العميل", "الحاوية", "الصنف", "وحدة الاستلام", "العدد", "وزن الوحدة (كجم)", "الكمية (كجم)", "الدفعة", "الحالة" },
+                    Columns = new List<string> { "رقم العملية / السند", "التاريخ", "العميل", "الحاوية", "الصنف", "وحدة الاستلام", "العدد", "وزن الوحدة (كجم)", "الكمية (كجم)", "الدفعة", "الحالة" },
                     RowLinks = new List<DocLinkDto>()
                 };
                 var q = Db.ShipmentItems.AsNoTracking()
@@ -301,10 +301,12 @@ public partial class ReportService
                     });
                     r.RowLinks.Add(new DocLinkDto { DocType = "planning", Id = x.pl.Id });
                 }
+                r.Summary["عدد البنود"] = UiFormat.N0(r.Rows.Count);
                 r.Summary["إجمالي المخطط (كجم)"] = UiFormat.N(tPlanned);
                 r.Summary["إجمالي المنتَج (كجم)"] = UiFormat.N(tProduced);
                 r.Summary["إجمالي المقبول (كجم)"] = UiFormat.N(tAccepted);
                 r.Summary["إجمالي المسلَّم (كجم)"] = UiFormat.N(tDelivered);
+                r.Summary["إجمالي المتبقي (كجم)"] = UiFormat.N(Math.Max(0, tPlanned - tDelivered));
                 r.Summary["نسبة الإنجاز"] = tPlanned > 0 ? UiFormat.Pct(tDelivered / tPlanned * 100) : "—";
                 // §الشكل الموحد: شريط معادلة الإقفال أسفل الجدول
                 r.Equation = $"المخطط {UiFormat.N(tPlanned)} = المنتَج {UiFormat.N(tProduced)} + المتبقي {UiFormat.N(Math.Max(0, tPlanned - tDelivered))} كجم"
@@ -319,7 +321,7 @@ public partial class ReportService
                 var r = new ReportResult
                 {
                     TitleAr = "سجل العمليات الموحد — دورة العمل الكاملة في دفتر واحد",
-                    Columns = new List<string> { "العملية", "المستند", "التاريخ", "العميل", "الصنف/البيان", "الكمية (كجم)", "الكراتين", "الحالة" },
+                    Columns = new List<string> { "العملية", "رقم العملية / المستند", "التاريخ", "العميل", "الصنف/البيان", "الكمية (كجم)", "الكراتين", "الحالة" },
                     RowLinks = new List<DocLinkDto>()
                 };
                 var rows = new List<(DateTime dt, string op, string doc, string cust, string item, string qty, string cartons, string status, DocLinkDto link)>();
@@ -632,7 +634,7 @@ public partial class ReportService
                 var r = new ReportResult
                 {
                     TitleAr = "تقرير الفحص التفصيلي — القرار والمعايير المخبرية لكل فحص",
-                    Columns = new List<string> { "الفحص", "التاريخ", "الأمر", "العميل", "الأصناف", "مقبول (كجم)", "مرفوض (كجم)",
+                    Columns = new List<string> { "رقم الفحص / العملية", "التاريخ", "الأمر", "العميل", "الأصناف", "مقبول (كجم)", "مرفوض (كجم)",
                         "رطوبة %", "سكريات Brix°", "قشرة %", "شوائب %", "القرار", "الحالة" },
                     RowLinks = new List<DocLinkDto>()
                 };
@@ -659,6 +661,7 @@ public partial class ReportService
                     r.RowLinks.Add(new DocLinkDto { DocType = "quality", Id = c.Id });
                 }
                 r.Summary["عدد الفحوصات"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي المفحوص (كجم)"] = UiFormat.N(tAcc + tRej);
                 r.Summary["إجمالي المقبول (كجم)"] = UiFormat.N(tAcc);
                 r.Summary["إجمالي المرفوض (كجم)"] = UiFormat.N(tRej);
                 r.Summary["نسبة القبول"] = (tAcc + tRej) > 0 ? UiFormat.Pct(tAcc / (tAcc + tRej) * 100) : "—";

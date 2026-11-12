@@ -19,25 +19,25 @@ public partial class ReportService : ServiceBase, IReportService
             .Select(p => new { p.Id, p.ProductNameAr }).ToList().Select(x => (x.Id.ToString(), x.ProductNameAr)).ToList();
         var list = new List<ReportDefinition>
     {
-        new ReportDefinition { Code = "receiving_line_treatment", TitleAr = "معالجة بنود الاستلام — نعم/لا وحتى تاريخ", Category = "الاستلام", Parameters = DateRange() },
-        new ReportDefinition { Code = "receiving", TitleAr = "تقارير الاستلام", Category = "الاستلام", Parameters = DateRange() },
-        new ReportDefinition { Code = "inventory", TitleAr = "تقارير المخزون (الأرصدة)", Category = "المخزون" },
-        new ReportDefinition { Code = "customers", TitleAr = "تقارير العملاء وأرصدتهم", Category = "العملاء" },
-        new ReportDefinition { Code = "lots", TitleAr = "تقارير الدفعات Lots", Category = "الدفعات" },
-        new ReportDefinition { Code = "plans", TitleAr = "خطط الإنتاج", Category = "الإنتاج", Parameters = DateRange() },
-        new ReportDefinition { Code = "orders", TitleAr = "أوامر الإنتاج", Category = "الإنتاج", Parameters = DateRange() },
-        new ReportDefinition { Code = "material_consumption", TitleAr = "تقارير استهلاك المواد", Category = "المواد" },
+        new ReportDefinition { Code = "receiving_line_treatment", TitleAr = "معالجة بنود الاستلام — نعم/لا وحتى تاريخ", Category = "الاستلام", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "receiving", TitleAr = "تقارير الاستلام", Category = "الاستلام", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "inventory", TitleAr = "تقارير المخزون (الأرصدة)", Category = "المخزون", Parameters = CustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "customers", TitleAr = "تقارير العملاء وأرصدتهم", Category = "العملاء", Parameters = CustOnly(customerOpts) },
+        new ReportDefinition { Code = "lots", TitleAr = "تقارير الدفعات Lots", Category = "الدفعات", Parameters = CustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "plans", TitleAr = "خطط الإنتاج", Category = "الإنتاج", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "orders", TitleAr = "أوامر الإنتاج", Category = "الإنتاج", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "material_consumption", TitleAr = "تقارير استهلاك المواد", Category = "المواد", Parameters = DateRange() },
         new ReportDefinition { Code = "aux_consumption_by_order", TitleAr = "استهلاك الأصناف المساعدة حسب أمر الإنتاج", Category = "المواد", Parameters = new List<ReportParameter>{ new ReportParameter{ Key="order", LabelAr="أمر الإنتاج", Kind="text" } } },
         new ReportDefinition { Code = "aux_period_consumption", TitleAr = "استهلاك صنف مساعد خلال فترة", Category = "المواد", Parameters = DateRange() },
         new ReportDefinition { Code = "aux_setup", TitleAr = "تهيئة الأصناف المساعدة", Category = "المواد" },
         new ReportDefinition { Code = "aux_bom", TitleAr = "مكونات الإنتاج (BOM) — احتياجات الصنف التام", Category = "المواد" },
-        new ReportDefinition { Code = "production", TitleAr = "الإنتاج المنفذ (جلسات التشغيل)", Category = "الإنتاج", Parameters = DateRange() },
-        new ReportDefinition { Code = "quality", TitleAr = "فحوصات الجودة", Category = "الجودة", Parameters = DateRange() },
-        new ReportDefinition { Code = "wastage", TitleAr = "الهالك والأصناف الثانوية", Category = "الجودة" },
-        new ReportDefinition { Code = "finished_goods", TitleAr = "تقارير الإنتاج التام", Category = "المخزون" },
-        new ReportDefinition { Code = "delivery", TitleAr = "تسليم العملاء", Category = "التسليم", Parameters = DateRange() },
-        new ReportDefinition { Code = "delivery_analysis", TitleAr = "تسليم العملاء — تحليلي (صنف/دفعة/خطة/أمر/صفة + مجاميع)", Category = "التسليم", Parameters = DateRange() },
-        new ReportDefinition { Code = "movements", TitleAr = "تقارير حركة المخزون", Category = "المخزون", Parameters = DateRange() },
+        new ReportDefinition { Code = "production", TitleAr = "الإنتاج المنفذ (جلسات التشغيل)", Category = "الإنتاج", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "quality", TitleAr = "فحوصات الجودة", Category = "الجودة", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "wastage", TitleAr = "الهالك والأصناف الثانوية", Category = "الجودة", Parameters = DateRange() },
+        new ReportDefinition { Code = "finished_goods", TitleAr = "تقارير الإنتاج التام", Category = "المخزون", Parameters = CustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "delivery", TitleAr = "تسليم العملاء", Category = "التسليم", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "delivery_analysis", TitleAr = "تسليم العملاء — تحليلي (صنف/دفعة/خطة/أمر/صفة + مجاميع)", Category = "التسليم", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
+        new ReportDefinition { Code = "movements", TitleAr = "تقارير حركة المخزون", Category = "المخزون", Parameters = DateRangeWithCustProd(customerOpts, productOpts) },
         new ReportDefinition { Code = "audit", TitleAr = "تقارير التدقيق", Category = "الإدارة", Parameters = DateRange() },
         new ReportDefinition { Code = "management", TitleAr = "تقارير الإدارة (مؤشرات)", Category = "الإدارة" },
         new ReportDefinition
@@ -81,6 +81,25 @@ public partial class ReportService : ServiceBase, IReportService
         new ReportParameter { Key = "to", LabelAr = "إلى تاريخ", Kind = "date" }
     };
 
+    private static List<ReportParameter> DateRangeWithCustProd(List<(string, string)> customers, List<(string, string)> products) => new()
+    {
+        new ReportParameter { Key = "from", LabelAr = "من تاريخ", Kind = "date" },
+        new ReportParameter { Key = "to", LabelAr = "إلى تاريخ", Kind = "date" },
+        new ReportParameter { Key = "customer", LabelAr = "العميل", Kind = "list", Options = customers },
+        new ReportParameter { Key = "product", LabelAr = "الصنف", Kind = "list", Options = products }
+    };
+
+    private static List<ReportParameter> CustProd(List<(string, string)> customers, List<(string, string)> products) => new()
+    {
+        new ReportParameter { Key = "customer", LabelAr = "العميل", Kind = "list", Options = customers },
+        new ReportParameter { Key = "product", LabelAr = "الصنف", Kind = "list", Options = products }
+    };
+
+    private static List<ReportParameter> CustOnly(List<(string, string)> customers) => new()
+    {
+        new ReportParameter { Key = "customer", LabelAr = "العميل", Kind = "list", Options = customers }
+    };
+
     public ReportResult Run(string reportCode, Dictionary<string, string> parameters)
     {
         Require("reports", "View");
@@ -98,7 +117,7 @@ public partial class ReportService : ServiceBase, IReportService
             case "receiving_line_treatment":
             {
                 r.TitleAr = "معالجة بنود الاستلام — القرار والتاريخ والحالة لكل بند";
-                r.Columns.AddRange(new[] { "رقم الاستلام", "تاريخ الاستلام", "العميل", "معرف البند", "الصنف", "الوحدة", "الكمية (كجم)", "العبوة", "المعالجة", "حتى تاريخ", "الحالة", "اكتملت فعلياً" });
+                r.Columns.AddRange(new[] { "رقم الاستلام", "تاريخ الاستلام", "العميل", "رقم العملية", "الصنف", "الوحدة", "الكمية (كجم)", "العبوة", "المعالجة", "حتى تاريخ", "الحالة", "اكتملت فعلياً" });
                 var query = Db.Shipments.AsNoTracking().Include(s => s.Items).AsQueryable();
                 if (from != null) query = query.Where(s => s.ReceivedDate >= from);
                 if (to != null) query = query.Where(s => s.ReceivedDate < to.Value.Date.AddDays(1));
@@ -107,11 +126,13 @@ public partial class ReportService : ServiceBase, IReportService
                 foreach (var ship in query.OrderByDescending(s => s.Id).ToList())
                 {
                     var states = receiving.ReadTreatmentStates(ship.Id).ToDictionary(x => x.ShipmentItemId);
+                    int lineNo = 1;
                     foreach (var item in ship.Items.Where(i => prodId == null || i.ProductId == prodId).OrderBy(i => i.Id))
                     {
                         var state = states[item.Id];
+                        string opNumber = $"{ship.DocumentNumber}-{lineNo++:D2}";
                         r.Rows.Add(new object[] { ship.DocumentNumber, ship.ReceivedDate?.ToString("dd/MM/yyyy"),
-                            Db.Customers.Where(c => c.Id == ship.CustomerId).Select(c => c.CustomerName).FirstOrDefault(), item.Id,
+                            Db.Customers.Where(c => c.Id == ship.CustomerId).Select(c => c.CustomerName).FirstOrDefault(), opNumber,
                             Db.Products.Where(p => p.Id == item.ProductId).Select(p => p.ProductNameAr).FirstOrDefault(),
                             item.ReceiptUnit, item.TotalWeightKg,
                             Db.PackagingTypes.Where(p => p.Id == item.PackagingTypeId).Select(p => p.PackageNameAr).FirstOrDefault(),
@@ -120,33 +141,59 @@ public partial class ReportService : ServiceBase, IReportService
                         r.RowLinks.Add(new DocLinkDto { DocType = "receiving", Id = ship.Id });
                     }
                 }
-                r.Summary["إجمالي الكمية (كجم)"] = r.Rows.Sum(x => Convert.ToDouble(x[6])).ToString("N1");
+                int totItems = r.Rows.Count;
+                double totKg = r.Rows.Sum(x => Convert.ToDouble(x[6]));
+                int needTreatment = r.Rows.Count(x => x[8]?.ToString() == "نعم");
+                int noTreatment = r.Rows.Count(x => x[8]?.ToString() == "لا");
+                int completed = r.Rows.Count(x => x[11] != null && !string.IsNullOrWhiteSpace(x[11].ToString()));
+                r.Summary["عدد البنود / العمليات"] = UiFormat.N0(totItems);
+                r.Summary["إجمالي الكمية (كجم)"] = totKg.ToString("N1");
+                r.Summary["تحتاج معالجة"] = UiFormat.N0(needTreatment);
+                r.Summary["لا تحتاج معالجة"] = UiFormat.N0(noTreatment);
+                r.Summary["اكتملت المعالجة"] = UiFormat.N0(completed);
+                r.Summary["قيد المعالجة"] = UiFormat.N0(Math.Max(0, needTreatment - completed));
+                if (needTreatment > 0)
+                    r.Summary["نسبة إنجاز المعالجة"] = UiFormat.Pct((double)completed / needTreatment * 100);
                 break;
             }
             case "receiving":
             {
                 r.TitleAr = "تقرير الاستلام";
-                r.Columns.AddRange(new[] { "رقم الاستلام", "التاريخ", "العميل", "عدد البنود", "إجمالي الوزن (كجم)", "الحالة" });
+                r.Columns.AddRange(new[] { "رقم الاستلام", "التاريخ", "العميل", "عدد البنود", "إجمالي الوزن (كجم)", "الحالة", "إجمالي الكراتين" });
                 var q = Db.Shipments.Include(s => s.Items).AsQueryable();
                 if (from != null) q = q.Where(s => s.ReceivedDate >= from);
                 if (to != null) q = q.Where(s => s.ReceivedDate <= to.Value.AddDays(1));
                 if (custId != null) q = q.Where(s => s.CustomerId == custId);
                 if (prodId != null) q = q.Where(s => s.Items.Any(i => i.ProductId == prodId));
+                double totWeight = 0; int totCartons = 0; int approvedCount = 0; int draftCount = 0;
                 foreach (var s in q.OrderByDescending(s => s.Id))
                 {
                     var cust = Db.Customers.Where(c => c.Id == s.CustomerId).Select(c => c.CustomerName).FirstOrDefault();
-                    r.Rows.Add(new object[] { s.DocumentNumber, s.ReceivedDate?.ToString("dd/MM/yyyy"), cust, s.Items.Count, s.TotalWeightKg, Core.Common.DocStatuses.ToArabic(s.Status) });
+                    totWeight += s.TotalWeightKg;
+                    totCartons += s.TotalCartons;
+                    if (s.IsApproved) approvedCount++; else draftCount++;
+                    r.Rows.Add(new object[] { s.DocumentNumber, s.ReceivedDate?.ToString("dd/MM/yyyy"), cust, s.Items.Count, s.TotalWeightKg, Core.Common.DocStatuses.ToArabic(s.Status), s.TotalCartons });
                     r.RowLinks.Add(new DocLinkDto { DocType = "receiving", Id = s.Id });
                 }
-                r.Summary["إجمالي الاستلام (كجم)"] = r.Rows.Sum(x => Convert.ToDouble(x[4])).ToString("N1");
+                r.Summary["إجمالي الاستلام (كجم)"] = totWeight.ToString("N1");
+                r.Summary["إجمالي الكراتين"] = UiFormat.N0(totCartons);
+                r.Summary["عدد الشحنات"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["شحنات معتمدة"] = UiFormat.N0(approvedCount);
+                r.Summary["شحنات مسودة"] = UiFormat.N0(draftCount);
                 break;
             }
             case "inventory":
             {
                 r.TitleAr = "تقرير أرصدة المخزون — كل عبوة منفصلة (4كجم/8كجم)";
                 r.Columns.AddRange(new[] { "المخزن", "الصنف/المادة", "الدفعة", "العميل", "العبوة", "الرصيد (كجم)", "عدد العبوات" });
-                foreach (var b in Db.StockBalances.Where(b => b.QtyKg != 0 || b.PackageCount != 0))
+                var bq = Db.StockBalances.Where(b => b.QtyKg != 0 || b.PackageCount != 0).AsQueryable();
+                if (custId != null) bq = bq.Where(b => b.CustomerId == custId);
+                if (prodId != null) bq = bq.Where(b => b.ProductId == prodId);
+                double totKg = 0; int totPkgs = 0;
+                foreach (var b in bq)
                 {
+                    totKg += b.QtyKg;
+                    totPkgs += b.PackageCount;
                     r.Rows.Add(new object[]
                     {
                         Db.Warehouses.Where(w => w.Id == b.WarehouseId).Select(w => w.WarehouseNameAr).FirstOrDefault(),
@@ -158,6 +205,9 @@ public partial class ReportService : ServiceBase, IReportService
                         b.QtyKg, b.PackageCount
                     });
                 }
+                r.Summary["عدد بنود المخزون"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي الرصيد (كجم)"] = UiFormat.N(totKg);
+                r.Summary["إجمالي العبوات / الكراتين"] = UiFormat.N0(totPkgs);
                 break;
             }
             case "customers":
@@ -165,14 +215,23 @@ public partial class ReportService : ServiceBase, IReportService
                 r.TitleAr = "تقرير العملاء وأرصدة الإنتاج التام";
                 // §القاعدة الذهبية: المنتج التام رسمي بالكرتون والكجم بيان إضافي
                 r.Columns.AddRange(new[] { "العميل", "الهاتف", UnitsPolicy.BalanceCtnHeader, UnitsPolicy.BalanceKgHeader, "المسلَّم (كرتون)", "المسلَّم (كجم)" });
-                foreach (var c in Db.Customers.Where(c => c.IsActive))
+                var cq = Db.Customers.Where(c => c.IsActive).AsQueryable();
+                if (custId != null) cq = cq.Where(c => c.Id == custId);
+                double totFgCtn = 0, totFgKg = 0, totDelCtn = 0, totDelKg = 0;
+                foreach (var c in cq)
                 {
                     double fgCtn = Db.StockBalances.Where(b => b.CustomerId == c.Id && b.QtyKg > 0).Sum(b => (double)b.PackageCount);
                     double fg = Db.StockBalances.Where(b => b.CustomerId == c.Id && b.QtyKg > 0).Sum(b => b.QtyKg);
                     double deliveredCtn = Db.CustomerDeliveries.Where(d => d.CustomerId == c.Id && d.IsApproved).Sum(d => (double)d.TotalCartons);
                     double delivered = Db.CustomerDeliveries.Where(d => d.CustomerId == c.Id && d.IsApproved).Sum(d => d.TotalQtyKg);
+                    totFgCtn += fgCtn; totFgKg += fg; totDelCtn += deliveredCtn; totDelKg += delivered;
                     r.Rows.Add(new object[] { c.CustomerName, c.Phone, fgCtn, fg, deliveredCtn, delivered });
                 }
+                r.Summary["عدد العملاء"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي رصيد التام (كرتون)"] = UiFormat.N0(totFgCtn);
+                r.Summary["إجمالي رصيد التام (كجم)"] = UiFormat.N(totFgKg);
+                r.Summary["إجمالي المسلَّم (كرتون)"] = UiFormat.N0(totDelCtn);
+                r.Summary["إجمالي المسلَّم (كجم)"] = UiFormat.N(totDelKg);
                 break;
             }
             case "lots":
@@ -182,62 +241,108 @@ public partial class ReportService : ServiceBase, IReportService
                 var lotsQ = Db.Lots.AsQueryable();
                 if (custId != null) lotsQ = lotsQ.Where(l => l.CustomerId == custId);
                 if (prodId != null) lotsQ = lotsQ.Where(l => l.ProductId == prodId);
+                double totInitial = 0, totProduced = 0, totAvail = 0, totDeliv = 0;
                 foreach (var l in lotsQ)
                 {
+                    double used = l.ProducedQtyKg + l.ReservedQtyKg;
+                    totInitial += l.InitialQtyKg;
+                    totProduced += used;
+                    totAvail += l.AvailableQtyKg;
+                    totDeliv += l.DeliveredQtyKg;
                     r.Rows.Add(new object[]
                     {
                         l.LotCode,
                         Db.Products.Where(p => p.Id == l.ProductId).Select(p => p.ProductNameAr).FirstOrDefault(),
                         Db.Customers.Where(c => c.Id == l.CustomerId).Select(c => c.CustomerName).FirstOrDefault(),
-                        l.InitialQtyKg, l.ProducedQtyKg + l.ReservedQtyKg, l.AvailableQtyKg, l.DeliveredQtyKg
+                        l.InitialQtyKg, used, l.AvailableQtyKg, l.DeliveredQtyKg
                     });
                     r.RowLinks.Add(new DocLinkDto { DocType = "receiving", Id = l.ShipmentId ?? 0 });
                 }
                 // §فحص التقارير الشامل: إجمالي المتبقي يُحسب من الصفوف المعروضة (بعد الفلاتر) لا من كل الدفعات
+                r.Summary["عدد الدفعات"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي المستلم (كجم)"] = totInitial.ToString("N1");
+                r.Summary["المصروف للإنتاج (كجم)"] = totProduced.ToString("N1");
                 r.Summary["إجمالي المتبقي (كجم)"] = r.Rows.Sum(x => Convert.ToDouble(x[5])).ToString("N1");
+                r.Summary["المسلَّم (كجم)"] = totDeliv.ToString("N1");
                 break;
             }
             case "plans":
             {
                 r.TitleAr = "تقرير خطط الإنتاج";
-                r.Columns.AddRange(new[] { "الخطة", "العنوان", "من", "إلى", "عدد البنود", "إجمالي الكمية (كجم)", "الحالة" });
+                r.Columns.AddRange(new[] { "الخطة", "العنوان", "من", "إلى", "عدد البنود", "إجمالي الكمية (كجم)", "الحالة", "إجمالي الكراتين" });
                 var plansQ = Db.ProductionPlans.Include(p => p.Items).AsQueryable();
                 if (from != null) plansQ = plansQ.Where(p => p.StartDate >= from);
                 if (to != null) plansQ = plansQ.Where(p => p.StartDate < to.Value.AddDays(1));
                 if (custId != null) plansQ = plansQ.Where(p => p.Items.Any(i => i.CustomerId == custId));
                 if (prodId != null) plansQ = plansQ.Where(p => p.Items.Any(i => i.ProductId == prodId));
+                double totPlannedKg = 0; int totPlannedCtn = 0; int approvedCount = 0;
                 foreach (var p in plansQ)
                 {
+                    double pkg = p.Items.Sum(i => i.PlannedQtyKg);
+                    int pctn = p.Items.Sum(i => i.PlannedCartons);
+                    totPlannedKg += pkg;
+                    totPlannedCtn += pctn;
+                    if (p.Status == DocStatuses.Approved) approvedCount++;
                     r.Rows.Add(new object[] { p.DocumentNumber, p.PlanTitle, p.StartDate?.ToString("dd/MM/yyyy"), p.EndDate?.ToString("dd/MM/yyyy"),
-                        p.Items.Count, p.Items.Sum(i => i.PlannedQtyKg), Core.Common.DocStatuses.ToArabic(p.Status) });
+                        p.Items.Count, pkg, Core.Common.DocStatuses.ToArabic(p.Status), pctn });
                     r.RowLinks.Add(new DocLinkDto { DocType = "planning", Id = p.Id });
                 }
+                r.Summary["عدد الخطط"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي المخطط (كجم)"] = UiFormat.N(totPlannedKg);
+                r.Summary["إجمالي المخطط (كرتون)"] = UiFormat.N0(totPlannedCtn);
+                r.Summary["خطط معتمدة"] = UiFormat.N0(approvedCount);
                 break;
             }
             case "orders":
             {
                 r.TitleAr = "تقرير أوامر الإنتاج";
-                r.Columns.AddRange(new[] { "الأمر", "التاريخ", "عدد البنود", "المخطط (كجم)", "المنتَج (كجم)", "الحالة" });
+                r.Columns.AddRange(new[] { "الأمر", "التاريخ", "العميل", "عدد البنود", "المخطط (كجم)", "المخطط (كرتون)", "المنتَج (كجم)", "المنتَج (كرتون)", "نسبة الإنجاز", "الحالة" });
                 var ordersQ = Db.ProductionOrders.Include(o => o.Items).AsQueryable();
                 if (from != null) ordersQ = ordersQ.Where(o => o.ProductionDate >= from);
                 if (to != null) ordersQ = ordersQ.Where(o => o.ProductionDate < to.Value.AddDays(1));
                 if (custId != null) ordersQ = ordersQ.Where(o => o.CustomerId == custId || o.Items.Any(i => i.CustomerId == custId));
                 if (prodId != null) ordersQ = ordersQ.Where(o => o.Items.Any(i => i.ProductId == prodId));
-                foreach (var o in ordersQ)
+                double tPlKg = 0, tPrKg = 0;
+                int tPlCtn = 0, tPrCtn = 0, closedCount = 0;
+                foreach (var o in ordersQ.OrderByDescending(x => x.Id))
                 {
-                    r.Rows.Add(new object[] { o.DocumentNumber, o.ProductionDate?.ToString("dd/MM/yyyy"), o.Items.Count,
-                        o.Items.Sum(i => i.PlannedQtyKg), o.Items.Sum(i => i.ProducedQtyKg), Core.Common.DocStatuses.ToArabic(o.Status) });
+                    string custName = o.CustomerId != null ? Db.Customers.Where(c => c.Id == o.CustomerId).Select(c => c.CustomerName).FirstOrDefault() ?? "—" : "—";
+                    double plKg = o.Items.Sum(i => i.PlannedQtyKg);
+                    int plCtn = o.Items.Sum(i => i.PlannedCartons);
+                    double prKg = o.Items.Sum(i => i.ProducedQtyKg);
+                    int prCtn = o.Items.Sum(i => i.ProducedCartons);
+                    tPlKg += plKg; tPrKg += prKg; tPlCtn += plCtn; tPrCtn += prCtn;
+                    if (o.IsClosed) closedCount++;
+                    string pct = plKg > 0 ? UiFormat.Pct(prKg / plKg * 100) : "—";
+                    r.Rows.Add(new object[] { o.DocumentNumber, o.ProductionDate?.ToString("dd/MM/yyyy"), custName, o.Items.Count,
+                        plKg, plCtn, prKg, prCtn, pct,
+                        o.IsClosed ? "مغلق" : Core.Common.DocStatuses.ToArabic(o.Status) });
                     r.RowLinks.Add(new DocLinkDto { DocType = "orders", Id = o.Id });
                 }
+                r.Summary["عدد الأوامر"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["أوامر مغلقة"] = UiFormat.N0(closedCount);
+                r.Summary["أوامر جارية"] = UiFormat.N0(r.Rows.Count - closedCount);
+                r.Summary["إجمالي المخطط (كجم)"] = UiFormat.N(tPlKg);
+                r.Summary["إجمالي المخطط (كرتون)"] = UiFormat.N0(tPlCtn);
+                r.Summary["إجمالي المنتَج (كجم)"] = UiFormat.N(tPrKg);
+                r.Summary["إجمالي المنتَج (كرتون)"] = UiFormat.N0(tPrCtn);
+                r.Summary["نسبة الإنجاز العامة"] = tPlKg > 0 ? UiFormat.Pct(tPrKg / tPlKg * 100) : "—";
+                r.Equation = $"المخطط {UiFormat.N(tPlKg)} كجم ({UiFormat.N0(tPlCtn)} كرتون) · المنتَج {UiFormat.N(tPrKg)} كجم ({UiFormat.N0(tPrCtn)} كرتون) · نسبة الإنجاز {(tPlKg > 0 ? UiFormat.Pct(tPrKg / tPlKg * 100) : "—")}";
                 break;
             }
             case "material_consumption":
             {
                 r.TitleAr = "تقرير استهلاك المواد المساعدة";
                 r.Columns.AddRange(new[] { "الأمر", "المادة", "المحتسبة", "المصروفة", "المستهلكة", "الهالك", "المتبقي غير المستخدم" });
+                double totCalc = 0, totIssued = 0, totConsumed = 0, totWasted = 0, totUnused = 0;
                 foreach (var m in Db.ProductionOrderMaterials)
                 {
                     double unused = m.ActualIssuedQty - m.ConsumedQty - m.WastedQty - m.ReturnedQty;
+                    totCalc += m.CalculatedQty;
+                    totIssued += m.ActualIssuedQty;
+                    totConsumed += m.ConsumedQty;
+                    totWasted += m.WastedQty;
+                    totUnused += unused;
                     r.Rows.Add(new object[]
                     {
                         Db.ProductionOrders.Where(o => o.Id == m.OrderId).Select(o => o.DocumentNumber).FirstOrDefault(),
@@ -245,52 +350,87 @@ public partial class ReportService : ServiceBase, IReportService
                         m.CalculatedQty, m.ActualIssuedQty, m.ConsumedQty, m.WastedQty, Math.Round(unused, 2)
                     });
                 }
+                r.Summary["عدد البنود"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["المحتسبة"] = UiFormat.N(totCalc);
+                r.Summary["المصروفة"] = UiFormat.N(totIssued);
+                r.Summary["المستهلكة"] = UiFormat.N(totConsumed);
+                r.Summary["الهالك"] = UiFormat.N(totWasted);
+                r.Summary["المتبقي"] = UiFormat.N(totUnused);
                 break;
             }
             case "production":
             {
                 r.TitleAr = "تقرير الإنتاج المنفذ";
-                r.Columns.AddRange(new[] { "الجلسة", "الأمر", "البداية", "النهاية", UnitsPolicy.FinishedQtyHeader, UnitsPolicy.FinishedWeightHeader, "الحالة" });
+                r.Columns.AddRange(new[] { "الجلسة", "الأمر", "العميل", "البداية", "النهاية", UnitsPolicy.FinishedQtyHeader, UnitsPolicy.FinishedWeightHeader, "الحالة" });
                 var exeQ = Db.ProductionExecutions.AsQueryable();
                 if (from != null) exeQ = exeQ.Where(e => e.StartDateTime >= from);
                 if (to != null) exeQ = exeQ.Where(e => e.StartDateTime < to.Value.AddDays(1));
                 if (custId != null) exeQ = exeQ.Where(e => Db.ProductionOrders.Any(o => o.Id == e.OrderId && o.CustomerId == custId));
                 if (prodId != null) exeQ = exeQ.Where(e => Db.ProductionOrderItems.Any(i => i.OrderId == e.OrderId && i.ProductId == prodId));
-                foreach (var e in exeQ)
+                int totCartons = 0; double totKg = 0; int closedDayCount = 0;
+                foreach (var e in exeQ.OrderByDescending(x => x.Id))
                 {
+                    var order = Db.ProductionOrders.AsNoTracking().FirstOrDefault(o => o.Id == e.OrderId);
+                    string cust = order?.CustomerId != null ? Db.Customers.Where(c => c.Id == order.CustomerId).Select(c => c.CustomerName).FirstOrDefault() ?? "—" : "—";
+                    totCartons += e.ActualCartons;
+                    totKg += e.ActualQtyKg;
+                    if (e.IsDayClosed) closedDayCount++;
                     r.Rows.Add(new object[] { e.DocumentNumber,
                         Db.ProductionOrders.Where(o => o.Id == e.OrderId).Select(o => o.DocumentNumber).FirstOrDefault(),
+                        cust,
                         e.StartDateTime?.ToString("dd/MM/yyyy HH:mm"), e.EndDateTime?.ToString("dd/MM/yyyy HH:mm"),
-                        e.ActualCartons, e.ActualQtyKg, Core.Common.DocStatuses.ToArabic(e.Status) });
+                        e.ActualCartons, e.ActualQtyKg, e.IsDayClosed ? "إقفال يوم 🔒" : Core.Common.DocStatuses.ToArabic(e.Status) });
                     r.RowLinks.Add(new DocLinkDto { DocType = "orders", Id = e.OrderId });
                 }
+                r.Summary["عدد الجلسات"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي الكراتين"] = UiFormat.N0(totCartons);
+                r.Summary["إجمالي الوزن (كجم)"] = UiFormat.N(totKg);
+                r.Summary["جلسات مقفلة اليوم"] = UiFormat.N0(closedDayCount);
                 break;
             }
             case "quality":
             {
                 r.TitleAr = "تقرير فحوصات الجودة";
-                r.Columns.AddRange(new[] { "الفحص", "الأمر", "التاريخ", "المفحوص (كرتون)", "المقبول (كرتون)", "المرفوض (كرتون)", "المفحوص (كجم)", "المقبول (كجم)", "المرفوض (كجم)", "الحالة" });
+                r.Columns.AddRange(new[] { "الفحص", "الأمر", "العميل", "التاريخ", "المفحوص (كرتون)", "المقبول (كرتون)", "المرفوض (كرتون)", "المفحوص (كجم)", "المقبول (كجم)", "المرفوض (كجم)", "الحالة" });
                 var qcQ = Db.QualityChecks.AsQueryable();
                 if (from != null) qcQ = qcQ.Where(c => c.CheckDate >= from);
                 if (to != null) qcQ = qcQ.Where(c => c.CheckDate < to.Value.AddDays(1));
                 if (custId != null) qcQ = qcQ.Where(c => Db.ProductionOrders.Any(o => o.Id == c.OrderId && o.CustomerId == custId));
                 if (prodId != null) qcQ = qcQ.Where(c => c.Items.Any(i => i.ProductId == prodId));
-                foreach (var c in qcQ)
+                double tCheckedCtn = 0, tAccCtn = 0, tRejCtn = 0;
+                double tCheckedKg = 0, tAccKg = 0, tRejKg = 0;
+                foreach (var c in qcQ.OrderByDescending(x => x.Id))
                 {
+                    var order = c.OrderId != null ? Db.ProductionOrders.AsNoTracking().FirstOrDefault(o => o.Id == c.OrderId) : null;
+                    string cust = order?.CustomerId != null ? Db.Customers.Where(custo => custo.Id == order.CustomerId).Select(custo => custo.CustomerName).FirstOrDefault() ?? "—" : "—";
+                    double rejCtn = c.TotalCheckedCartons - c.AcceptedCartons;
+                    tCheckedCtn += c.TotalCheckedCartons; tAccCtn += c.AcceptedCartons; tRejCtn += rejCtn;
+                    tCheckedKg += c.TotalCheckedKg; tAccKg += c.AcceptedKg; tRejKg += c.RejectedKg;
                     r.Rows.Add(new object[] { c.DocumentNumber,
                         Db.ProductionOrders.Where(o => o.Id == c.OrderId).Select(o => o.DocumentNumber).FirstOrDefault(),
-                        c.CheckDate?.ToString("dd/MM/yyyy"), c.TotalCheckedCartons, c.AcceptedCartons, c.TotalCheckedCartons - c.AcceptedCartons,
+                        cust,
+                        c.CheckDate?.ToString("dd/MM/yyyy"), c.TotalCheckedCartons, c.AcceptedCartons, rejCtn,
                         c.TotalCheckedKg, c.AcceptedKg, c.RejectedKg, Core.Common.DocStatuses.ToArabic(c.Status) });
                     r.RowLinks.Add(new DocLinkDto { DocType = "quality", Id = c.Id });
                 }
+                r.Summary["عدد الفحوصات"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["المفحوص (كرتون)"] = UiFormat.N0(tCheckedCtn);
+                r.Summary["المقبول (كرتون)"] = UiFormat.N0(tAccCtn);
+                r.Summary["المرفوض (كرتون)"] = UiFormat.N0(tRejCtn);
+                r.Summary["المفحوص (كجم)"] = UiFormat.N(tCheckedKg);
+                r.Summary["المقبول (كجم)"] = UiFormat.N(tAccKg);
+                r.Summary["المرفوض (كجم)"] = UiFormat.N(tRejKg);
+                r.Summary["نسبة القبول"] = tCheckedKg > 0 ? UiFormat.Pct(tAccKg / tCheckedKg * 100) : (tCheckedCtn > 0 ? UiFormat.Pct((double)tAccCtn / tCheckedCtn * 100) : "—");
                 break;
             }
             case "wastage":
             {
                 r.TitleAr = "تقرير الهالك والأصناف الثانوية (بالكيلو)";
                 r.Columns.AddRange(new[] { "الفحص", "الصنف الثانوي", "الكمية (كجم)" });
+                double totWastageKg = 0;
                 foreach (var b in Db.QualityByProductRecords)
                 {
+                    totWastageKg += b.QtyKg;
                     r.Rows.Add(new object[]
                     {
                         Db.QualityChecks.Where(c => c.Id == b.CheckId).Select(c => c.DocumentNumber).FirstOrDefault(),
@@ -298,6 +438,8 @@ public partial class ReportService : ServiceBase, IReportService
                         b.QtyKg
                     });
                 }
+                r.Summary["عدد الحركات"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي الكمية (كجم)"] = UiFormat.N(totWastageKg);
                 break;
             }
             case "finished_goods":
@@ -308,8 +450,11 @@ public partial class ReportService : ServiceBase, IReportService
                 var fgQ = Db.StockBalances.Where(b => b.WarehouseId == whFg && (b.QtyKg != 0 || b.PackageCount != 0));
                 if (custId != null) fgQ = fgQ.Where(b => b.CustomerId == custId);
                 if (prodId != null) fgQ = fgQ.Where(b => b.ProductId == prodId);
+                double tCtn = 0, tKg = 0;
                 foreach (var b in fgQ)
                 {
+                    tCtn += b.PackageCount;
+                    tKg += b.QtyKg;
                     r.Rows.Add(new object[]
                     {
                         Db.Customers.Where(c => c.Id == b.CustomerId).Select(c => c.CustomerName).FirstOrDefault(),
@@ -318,6 +463,9 @@ public partial class ReportService : ServiceBase, IReportService
                         (double)b.PackageCount, b.QtyKg
                     });
                 }
+                r.Summary["عدد الأرصدة"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي التام (كرتون)"] = UiFormat.N0(tCtn);
+                r.Summary["إجمالي التام (كجم)"] = UiFormat.N(tKg);
                 break;
             }
             case "delivery":
@@ -329,13 +477,21 @@ public partial class ReportService : ServiceBase, IReportService
                 if (to != null) dlvQ = dlvQ.Where(d => d.DeliveryDate < to.Value.AddDays(1));
                 if (custId != null) dlvQ = dlvQ.Where(d => d.CustomerId == custId);
                 if (prodId != null) dlvQ = dlvQ.Where(d => d.Items.Any(i => i.ProductId == prodId));
-                foreach (var d in dlvQ)
+                double totCartons = 0, totWeight = 0; int approvedCount = 0;
+                foreach (var d in dlvQ.OrderByDescending(x => x.Id))
                 {
+                    totCartons += d.TotalCartons;
+                    totWeight += d.TotalQtyKg;
+                    if (d.IsApproved) approvedCount++;
                     r.Rows.Add(new object[] { d.DocumentNumber,
                         Db.Customers.Where(c => c.Id == d.CustomerId).Select(c => c.CustomerName).FirstOrDefault(),
                         d.DeliveryDate?.ToString("dd/MM/yyyy"), (double)d.TotalCartons, d.TotalQtyKg, Core.Common.DocStatuses.ToArabic(d.Status) });
                     r.RowLinks.Add(new DocLinkDto { DocType = "delivery", Id = d.Id });
                 }
+                r.Summary["عدد سندات التسليم"] = UiFormat.N0(r.Rows.Count);
+                r.Summary["إجمالي المسلَّم (كرتون)"] = UiFormat.N0(totCartons);
+                r.Summary["إجمالي المسلَّم (كجم)"] = UiFormat.N(totWeight);
+                r.Summary["سندات معتمدة"] = UiFormat.N0(approvedCount);
                 break;
             }
             case "delivery_analysis":
@@ -493,6 +649,10 @@ public partial class ReportService : ServiceBase, IReportService
                     foreach (var s in j.Stages)
                         r.Rows.Add(new object[] { j.ProductName, j.ItemTypeAr, s.CustomerName, s.StageAr, s.DocNumber, s.Date ?? "-", s.LotCode ?? "-", s.QtyKg, s.Cartons, s.StatusAr ?? "-", s.Detail ?? "-" });
                 }
+                r.Summary["عدد رحلات الأصناف"] = UiFormat.N0(journeys.Count);
+                r.Summary["إجمالي المستلم (كجم)"] = UiFormat.N(journeys.Sum(j => j.ReceivedKg));
+                r.Summary["إجمالي المنتَج (كجم)"] = UiFormat.N(journeys.Sum(j => j.ProducedKg));
+                r.Summary["إجمالي المسلَّم (كجم)"] = UiFormat.N(journeys.Sum(j => j.DeliveredKg));
                 break;
             }
             case "aux_consumption_by_order":
