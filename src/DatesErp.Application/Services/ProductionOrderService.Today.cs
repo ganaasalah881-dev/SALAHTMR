@@ -120,7 +120,7 @@ public partial class ProductionOrderService
         var packageIds = pItems.Where(i => i.PackagingTypeId != null).Select(i => i.PackagingTypeId!.Value).Distinct().ToList();
         var packages = Db.PackagingTypes.AsNoTracking().Where(p => packageIds.Contains(p.Id)).ToDictionary(p => p.Id, p => p.PackageNameAr);
 
-        return pItems.Select(it =>
+        return pItems.Select((it, index) =>
         {
             var custId = it.CustomerId ?? order.CustomerId;
             string custName = custId != null && customers.TryGetValue(custId.Value, out var cn) ? cn : "—";
@@ -131,6 +131,7 @@ public partial class ProductionOrderService
 
             return new TodayProductionRowDto
             {
+                LineNo = index + 1,
                 OrderId = order.Id,
                 OrderNumber = order.DocumentNumber,
                 PlanId = order.SourcePlanId ?? 0,
@@ -210,7 +211,7 @@ public partial class ProductionOrderService
         var anyDayClosedOrders = Db.ProductionExecutions.AsNoTracking()
             .Where(e => e.IsDayClosed)
             .Select(e => e.OrderId).ToHashSet();
-        var rows = entries.Select(e =>
+        var rows = entries.Select((e, index) =>
         {
             var scheduled = e.Item.ScheduledDate?.Date;
             var isToday = scheduled == businessDay;
@@ -236,6 +237,7 @@ public partial class ProductionOrderService
                 .Where(warehouseNames.ContainsKey).Select(id => warehouseNames[id]).ToList();
             return new TodayProductionRowDto
             {
+                LineNo = index + 1,
                 PlanId = e.Plan.Id, PlanItemId = e.Item.Id, PlanNumber = e.Plan.DocumentNumber, PlanTitle = e.Plan.PlanTitle,
                 CustomerId = e.Item.CustomerId,
                 CustomerName = e.Item.CustomerId is int c && customers.TryGetValue(c, out var cn) ? cn : "غير محدد في الخطة",

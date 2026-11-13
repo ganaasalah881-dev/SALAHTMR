@@ -11,6 +11,7 @@ public sealed class TodayProductionDto
 
 public sealed class TodayProductionRowDto : System.ComponentModel.INotifyPropertyChanged
 {
+    public int LineNo { get; set; }
     public int PlanId { get; init; }
     public int PlanItemId { get; init; }
     public string PlanNumber { get; init; }

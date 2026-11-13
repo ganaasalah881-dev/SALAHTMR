@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using DatesErp.Desktop.Services;
 
 namespace DatesErp.Desktop.Views.Screens;
@@ -32,7 +33,14 @@ public class DocSearchWindow : Window
     public int? SelectedId { get; private set; }
 
     private readonly List<(SearchFieldDef def, FrameworkElement input)> _fields = new();
-    private readonly DataGrid _grid = new() { CanUserSortColumns = true };
+    private readonly DataGrid _grid = new()
+    {
+        CanUserSortColumns = true,
+        GridLinesVisibility = DataGridGridLinesVisibility.All,
+        HorizontalGridLinesBrush = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8)),
+        VerticalGridLinesBrush = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8)),
+        BorderBrush = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8))
+    };
     private readonly TextBox _quickSearchBox = new() { Width = 320, Height = 32, ToolTip = "بحث سريع في كل أعمدة النتائج" };
     private readonly TextBlock _state = new() { FontSize = 12.5, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 8), Foreground = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#0F766E") };
     private readonly Func<Dictionary<string, string>, SearchResult> _search;

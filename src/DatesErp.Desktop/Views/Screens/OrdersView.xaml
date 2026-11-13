@@ -204,14 +204,14 @@
                           CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single"
                           SelectionUnit="FullRow" RowHeight="32" ColumnHeaderHeight="36" FontSize="12.5" AlternationCount="2"
                           AlternatingRowBackground="#FBFAF5" Background="#FDFCF8" RowBackground="#FDFCF8"
-                          GridLinesVisibility="None"
-                          HeadersVisibility="Column" BorderBrush="#B8B5A0" BorderThickness="1.5"
+                          GridLinesVisibility="All" HorizontalGridLinesBrush="#94A3B8" VerticalGridLinesBrush="#94A3B8"
+                          HeadersVisibility="Column" BorderBrush="#94A3B8" BorderThickness="1.5"
                           SelectionChanged="TodayGrid_SelectionChanged" MouseDoubleClick="TodayGrid_DoubleClick">
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
                             <Setter Property="Padding" Value="8,4"/>
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="BorderBrush" Value="#F0EDE4"/>
+                            <Setter Property="BorderBrush" Value="#94A3B8"/>
                             <Setter Property="BorderThickness" Value="0,0,1,1"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
@@ -234,6 +234,16 @@
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding LineNo, Mode=OneWay}" Width="45" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#475569"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="التاريخ المجدول" Binding="{Binding ScheduledDate, Mode=OneWay}" Width="100" IsReadOnly="True"/>
                         <DataGridTextColumn Header="العميل 👤" Binding="{Binding CustomerName, Mode=OneWay}" Width="1.25*" MinWidth="125" IsReadOnly="True"/>
                         <DataGridTemplateColumn Header="ماذا سننتج؟ 🏷️" Width="1.5*" MinWidth="150" IsReadOnly="True">

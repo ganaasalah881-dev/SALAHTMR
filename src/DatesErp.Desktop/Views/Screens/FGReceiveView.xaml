@@ -44,8 +44,19 @@
                         </StackPanel>
                     </DockPanel>
                 </Border>
-                <DataGrid x:Name="ItemsGrid" MinHeight="260" Height="400" RowHeight="32" IsReadOnly="False" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid x:Name="ItemsGrid" MinHeight="260" Height="400" RowHeight="32" IsReadOnly="False" AutoGenerateColumns="False" CanUserAddRows="False"
+                          GridLinesVisibility="All" HorizontalGridLinesBrush="#94A3B8" VerticalGridLinesBrush="#94A3B8" BorderBrush="#94A3B8">
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding LineNo, Mode=OneWay}" Width="45" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#475569"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridCheckBoxColumn Header="تضمين" Binding="{Binding Included, UpdateSourceTrigger=PropertyChanged}" Width="62"/>
                         <DataGridTextColumn Header="نوع المخرج" Binding="{Binding OutputType}" Width="105" IsReadOnly="True"/>
                         <DataGridTextColumn Header="الصنف / المخرج" Binding="{Binding ProductName}" Width="*" IsReadOnly="True"/>

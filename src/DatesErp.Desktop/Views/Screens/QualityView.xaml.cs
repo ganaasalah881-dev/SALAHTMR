@@ -47,6 +47,7 @@ public partial class QualityView : UserControl
     /// </summary>
     private class ItemRowUi : EditableRow
     {
+        public int LineNo { get; set; }
         public int ProductId { get; set; }
         public int? OrderItemId { get; set; }
         public int? LotId { get; set; }
@@ -71,6 +72,7 @@ public partial class QualityView : UserControl
     /// <summary>صف معيار معتمد بقيمته المسجلة وحالة المطابقة.</summary>
     private class StandardUi : EditableRow
     {
+        public int LineNo { get; set; }
         public int StandardId { get; set; }
         public string Key { get; set; }
         public string Name { get; set; }
@@ -582,7 +584,7 @@ public partial class QualityView : UserControl
                 chip.Child = new TextBlock { FontWeight = FontWeights.Bold, FontSize = 12, Foreground = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#14532D")),
                     Text = $"{item.CustomerName ?? "غير محدد"} — {item.ProductName} — {item.ProducedCartons:N0}" };
                 ItemsPanel.Children.Add(chip);
-                var row = new ItemRowUi { ProductId = item.ProductId, OrderItemId = item.OrderItemId, LotId = item.LotId,
+                var row = new ItemRowUi { LineNo = _rows.Count + 1, ProductId = item.ProductId, OrderItemId = item.OrderItemId, LotId = item.LotId,
                     CustomerName = item.CustomerName ?? "غير محدد", ProductName = item.ProductName, LotCode = item.LotCode ?? "—",
                     CartonWeight = item.CartonWeightKg > 0 ? item.CartonWeightKg.ToString("0.##") : "—",
                     PackageName = string.IsNullOrWhiteSpace(item.PackageName) ? "—" : item.PackageName,
@@ -607,7 +609,7 @@ public partial class QualityView : UserControl
             try
             {
                 foreach (var st in db.QualityStandards.AsNoTracking().Where(s2 => s2.IsActive).OrderBy(s2 => s2.SortNo))
-                    _standards.Add(new StandardUi { StandardId = st.Id, Key = st.Code, Name = st.NameAr, UnitLabel = st.UnitLabel,
+                    _standards.Add(new StandardUi { LineNo = _standards.Count + 1, StandardId = st.Id, Key = st.Code, Name = st.NameAr, UnitLabel = st.UnitLabel,
                         Min = st.MinValue ?? double.MinValue, Max = st.MaxValue ?? double.MaxValue,
                         Value = savedStd.TryGetValue(st.Id, out var v) ? v : st.DefaultValue });
             }
@@ -677,6 +679,7 @@ public partial class QualityView : UserControl
             ResultsGrid.Columns.Add(col);
         }
 
+        AddCol("#", nameof(ItemRowUi.LineNo), 45, boldCenterStyle);
         AddCol("العميل", nameof(ItemRowUi.CustomerName), 220, wrapStyle);
         AddCol("الصنف", nameof(ItemRowUi.ProductName), 240, wrapStyle);
         AddCol("وزن الكرتون", nameof(ItemRowUi.CartonWeight), 100, boldCenterStyle);

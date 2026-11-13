@@ -221,14 +221,14 @@
                 <DataGrid x:Name="ItemsGrid" MinHeight="260" RowHeight="32" ColumnHeaderHeight="36" FontSize="12.5" AlternationCount="2"
                           AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                           AlternatingRowBackground="#FBFAF5" Background="#FDFCF8" RowBackground="#FDFCF8"
-                          GridLinesVisibility="None"
-                          BorderBrush="#B8B5A0" BorderThickness="1.5" HeadersVisibility="Column"
+                          GridLinesVisibility="All" HorizontalGridLinesBrush="#94A3B8" VerticalGridLinesBrush="#94A3B8"
+                          BorderBrush="#94A3B8" BorderThickness="1.5" HeadersVisibility="Column"
                           PreviewMouseLeftButtonDown="Grid_SingleClickEdit">
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
                             <Setter Property="Padding" Value="8,4"/>
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="BorderBrush" Value="#F0EDE4"/>
+                            <Setter Property="BorderBrush" Value="#94A3B8"/>
                             <Setter Property="BorderThickness" Value="0,0,1,1"/>
                         </Style>
                     </DataGrid.CellStyle>
@@ -245,6 +245,16 @@
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding LineNo, Mode=OneWay}" Width="45" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Foreground" Value="#475569"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="العميل 👤" Binding="{Binding Customer, Mode=OneWay}" Width="1.2*" MinWidth="130" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -402,14 +412,14 @@
                     <DataGrid x:Name="SecondaryGrid" MinHeight="66" MaxHeight="126" RowHeight="30" ColumnHeaderHeight="32" AlternationCount="2"
                               AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                               AlternatingRowBackground="#FBFAF5" Background="#FDFCF8" RowBackground="#FDFCF8"
-                              GridLinesVisibility="None"
-                              BorderBrush="#B8B5A0" BorderThickness="1.5" HeadersVisibility="Column"
+                              GridLinesVisibility="All" HorizontalGridLinesBrush="#94A3B8" VerticalGridLinesBrush="#94A3B8"
+                              BorderBrush="#94A3B8" BorderThickness="1.5" HeadersVisibility="Column"
                               LoadingRow="Secondary_LoadingRow" PreviewKeyDown="Secondary_KeyDown">
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource ErpDataGridCellStyle}">
                                 <Setter Property="Padding" Value="6,2"/>
                                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                <Setter Property="BorderBrush" Value="#F0EDE4"/>
+                                <Setter Property="BorderBrush" Value="#94A3B8"/>
                                 <Setter Property="BorderThickness" Value="0,0,1,1"/>
                                 <EventSetter Event="GotFocus" Handler="Secondary_GotFocus"/>
                             </Style>
@@ -427,6 +437,16 @@
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
                         <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding LineNo, Mode=OneWay}" Width="45" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="Foreground" Value="#475569"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn Header="المخرج من التعريفات" Width="2*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

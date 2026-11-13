@@ -15,6 +15,7 @@ namespace DatesErp.Desktop.Views.Screens;
 
 public class FrLineUi : INotifyPropertyChanged
 {
+    public int LineNo { get; set; }
     public int ItemId { get; set; }         // معرف بند السند بعد الحفظ
     public int? DeliveryItemId { get; set; }
     public int? OrderItemId { get; set; }
@@ -207,6 +208,7 @@ public partial class FGReceiveView : UserControl
                 int? warehouseId = DefaultWarehouseId();
                 _lines.Add(new FrLineUi
                 {
+                    LineNo = _lines.Count + 1,
                     OrderItemId = line.OrderItemId,
                     CartonWeightKg = line.CartonWeightKg,
                     ByProductId = line.ByProductId,
@@ -537,6 +539,7 @@ public partial class FGReceiveView : UserControl
             foreach (var i in r.Items)
                 _lines.Add(new FrLineUi
                 {
+                    LineNo = _lines.Count + 1,
                     ItemId = i.Id,
                     DeliveryItemId = i.DeliveryItemId,
                     OrderItemId = i.OrderItemId,

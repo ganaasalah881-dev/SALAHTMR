@@ -45,6 +45,7 @@ internal static class OrderGridColumns
 /// <summary>§B80 — صف بند أمر قابل للتعديل (مسودة): الكراتين تُعدَّل والوزن المكافئ يُحسب في الخدمة.</summary>
 public class OrderItemEditRow
 {
+    public int LineNo { get; set; }
     public int Id { get; set; }
     public string Customer { get; set; }
     public string Shipment { get; set; }
@@ -92,9 +93,10 @@ public class OrderDocumentPanel : UserControl
         g.Background = Brushes.White;
         g.RowBackground = Brushes.White;
         g.AlternatingRowBackground = new SolidColorBrush(Color.FromRgb(0xFB, 0xFA, 0xF5));
-        g.GridLinesVisibility = DataGridGridLinesVisibility.Horizontal;
-        g.HorizontalGridLinesBrush = new SolidColorBrush(Color.FromRgb(0x8C, 0xA0, 0xAC));
-        g.BorderBrush = new SolidColorBrush(Color.FromRgb(0xD9, 0xD4, 0xC4));
+        g.GridLinesVisibility = DataGridGridLinesVisibility.All;
+        g.HorizontalGridLinesBrush = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8));
+        g.VerticalGridLinesBrush = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8));
+        g.BorderBrush = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8));
         g.BorderThickness = new Thickness(1);
         var hs = new Style(typeof(DataGridColumnHeader));
         hs.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(0x16, 0x28, 0x3C))));
@@ -115,6 +117,7 @@ public class OrderDocumentPanel : UserControl
         StyleShapeGrid(_materialsGrid);
         StyleShapeGrid(_eventsGrid);
 
+        _itemsGrid.Columns.Add(new DataGridTextColumn { Header = "#", Binding = new System.Windows.Data.Binding("LineNo"), Width = 45, IsReadOnly = true });
         _itemsGrid.Columns.Add(OrderGridColumns.IdentCol("العميل المالك 👤", "Customer", 1.1, 130));
         _itemsGrid.Columns.Add(OrderGridColumns.IdentCol("الشحنة 🚢", "Shipment", 0.85, 105));
         _itemsGrid.Columns.Add(OrderGridColumns.IdentCol("المخزن 🏬", "Warehouse", 1.0, 115));
@@ -127,6 +130,7 @@ public class OrderDocumentPanel : UserControl
         _itemsGrid.Columns.Add(new DataGridTextColumn { Header = "المنتَج (كجم)", Binding = new System.Windows.Data.Binding("ProducedKg"), Width = 90, IsReadOnly = true });
         _itemsGrid.Columns.Add(new DataGridTextColumn { Header = "الحالة", Binding = new System.Windows.Data.Binding("StatusAr"), Width = 80, IsReadOnly = true });
 
+        _materialsGrid.Columns.Add(new DataGridTextColumn { Header = "#", Binding = new System.Windows.Data.Binding("LineNo"), Width = 45, IsReadOnly = true });
         _materialsGrid.Columns.Add(new DataGridTextColumn { Header = "الصنف المساعد", Binding = new System.Windows.Data.Binding("Name"), Width = new DataGridLength(1, DataGridLengthUnitType.Star) });
         _materialsGrid.Columns.Add(new DataGridTextColumn { Header = "المطلوب", Binding = new System.Windows.Data.Binding("Required"), Width = 90 });
         _materialsGrid.Columns.Add(new DataGridTextColumn { Header = "المصروف", Binding = new System.Windows.Data.Binding("Issued"), Width = 90 });
@@ -136,6 +140,7 @@ public class OrderDocumentPanel : UserControl
         _materialsGrid.Columns.Add(new DataGridTextColumn { Header = "الوحدة", Binding = new System.Windows.Data.Binding("Unit"), Width = 80 });
         _materialsGrid.Columns.Add(new DataGridTextColumn { Header = "التفاصيل", Binding = new System.Windows.Data.Binding("Details"), Width = new DataGridLength(1, DataGridLengthUnitType.Star) });
 
+        _eventsGrid.Columns.Add(new DataGridTextColumn { Header = "#", Binding = new System.Windows.Data.Binding("LineNo"), Width = 45, IsReadOnly = true });
         _eventsGrid.Columns.Add(new DataGridTextColumn { Header = "الوقت", Binding = new System.Windows.Data.Binding("Time"), Width = 130 });
         _eventsGrid.Columns.Add(new DataGridTextColumn { Header = "المستخدم", Binding = new System.Windows.Data.Binding("User"), Width = 140 });
         _eventsGrid.Columns.Add(new DataGridTextColumn { Header = "العملية", Binding = new System.Windows.Data.Binding("Action"), Width = 200 });
@@ -225,7 +230,7 @@ public class OrderDocumentPanel : UserControl
             // البنود بالهوية الكاملة — §B80 صفوف قابلة لتعديل الكراتين لأمر المسودة + دعم تعدد المخازن والدفعات
             var items = db.ProductionOrderItems.AsNoTracking().Include(i => i.Allocations).Where(i => i.OrderId == _orderId).ToList();
             var whNames = db.Warehouses.AsNoTracking().ToDictionary(w => w.Id, w => w.WarehouseNameAr);
-            _itemRows = items.Select(it =>
+            _itemRows = items.Select((it, idx) =>
             {
                 var lotIds = it.Allocations.Count > 0
                     ? it.Allocations.Select(a => a.LotId).Distinct().ToList()
@@ -248,6 +253,7 @@ public class OrderDocumentPanel : UserControl
                     : "-";
                 return new OrderItemEditRow
                 {
+                    LineNo = idx + 1,
                     Id = it.Id,
                     Customer = it.CustomerId != null ? db.Customers.AsNoTracking().Where(c => c.Id == it.CustomerId).Select(c => c.CustomerName).FirstOrDefault() : "-",
                     Shipment = it.ShipmentId != null ? db.Shipments.AsNoTracking().Where(s => s.Id == it.ShipmentId).Select(s => s.DocumentNumber).FirstOrDefault() : "-",
@@ -269,8 +275,9 @@ public class OrderDocumentPanel : UserControl
             {
                 var auxSvc = scope.ServiceProvider.GetRequiredService<DatesErp.Application.Services.AuxiliaryManagementService>();
                 var needs = auxSvc.CalculateNeedsForOrder(_orderId);
-                _materialsGrid.ItemsSource = needs.Select(n => new
+                _materialsGrid.ItemsSource = needs.Select((n, idx) => new
                 {
+                    LineNo = idx + 1,
                     Name = n.AuxiliaryProductName,
                     Required = n.RequiredQty,
                     Issued = n.IssuedQty,
@@ -286,8 +293,9 @@ public class OrderDocumentPanel : UserControl
             {
                 // fallback للقديم
                 _materialsGrid.ItemsSource = db.ProductionOrderMaterials.AsNoTracking().Where(m => m.OrderId == _orderId).ToList()
-                    .Select(m => new
+                    .Select((m, idx) => new
                     {
+                        LineNo = idx + 1,
                         Name = m.AuxiliaryProductId != null ? db.Products.Where(p => p.Id == m.AuxiliaryProductId).Select(p => p.ProductNameAr).FirstOrDefault() : db.AuxiliaryMaterials.AsNoTracking().Where(a => a.Id == m.MaterialId).Select(a => a.MaterialNameAr).FirstOrDefault(),
                         Required = m.CalculatedQty,
                         Issued = m.ActualIssuedQty,
@@ -300,7 +308,8 @@ public class OrderDocumentPanel : UserControl
                     }).ToList();
             }
 
-            _eventsGrid.ItemsSource = svc.GetOrderEvents(_orderId);
+            var events = svc.GetOrderEvents(_orderId);
+            _eventsGrid.ItemsSource = events?.Select((e, idx) => new { LineNo = idx + 1, e.Time, e.User, e.Action, e.Detail }).ToList();
             _notesBox.Text = db.ProductionOrders.AsNoTracking().Where(o => o.Id == _orderId).Select(o => o.Notes).FirstOrDefault() ?? "";
 
             BuildActions();

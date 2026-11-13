@@ -19,8 +19,8 @@
     <Color x:Key="ThemeButtonColor">#0284C7</Color>
     <Color x:Key="ThemeButtonHoverColor">#0369A1</Color>
     <Color x:Key="ThemeButtonPressedColor">#075985</Color>
-    <Color x:Key="ThemeBorderColor">#CBD5E1</Color>
-    <Color x:Key="ThemeGridLineColor">#E2E8F0</Color>
+    <Color x:Key="ThemeBorderColor">#94A3B8</Color>
+    <Color x:Key="ThemeGridLineColor">#94A3B8</Color>
     <Color x:Key="ThemeSuccessColor">#16A34A</Color>
     <Color x:Key="ThemeWarningColor">#D97706</Color>
     <Color x:Key="ThemeErrorColor">#DC2626</Color>

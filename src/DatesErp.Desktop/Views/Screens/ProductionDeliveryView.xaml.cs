@@ -354,9 +354,11 @@ public partial class ProductionDeliveryView : UserControl
             }
             else
             {
+                int itemIndex = 1;
                 foreach (var item in order.Items)
                 {
                     var row = new ActualProductionRow(item, historical, continuation);
+                    row.LineNo = itemIndex++;
                     var matchedLine = card?.Lines?.FirstOrDefault(l =>
                         l.ByProductId == null
                         && l.ProductId == item.ProductId
@@ -373,6 +375,7 @@ public partial class ProductionDeliveryView : UserControl
         }
         else if (card != null)
         {
+            int itemIndex = 1;
             foreach (var line in card.Lines.Where(l => l.ByProductId == null))
             {
                 var synthetic = new ActualDeliveryItemDto
@@ -392,6 +395,7 @@ public partial class ProductionDeliveryView : UserControl
                 };
                 var row = new ActualProductionRow(synthetic, recorded: true, continuation: false)
                 {
+                    LineNo = itemIndex++,
                     WarehouseId = line.WarehouseId ?? fallbackWh,
                     WarehouseName = line.WarehouseName ?? "—"
                 };
@@ -1008,6 +1012,8 @@ public partial class ProductionDeliveryView : UserControl
             foreach (ActualSecondaryRow row in e.OldItems) row.PropertyChanged -= SecondaryRow_PropertyChanged;
         if (e.NewItems != null)
             foreach (ActualSecondaryRow row in e.NewItems) row.PropertyChanged += SecondaryRow_PropertyChanged;
+        int secIndex = 1;
+        foreach (var sec in _secondary) sec.LineNo = secIndex++;
         RefreshSecondarySummary();
     }
 

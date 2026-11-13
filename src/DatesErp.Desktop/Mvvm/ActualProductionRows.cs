@@ -11,6 +11,7 @@ public sealed class ActualProductionRow : INotifyPropertyChanged, IDataErrorInfo
     private readonly bool _historical;
     private readonly bool _continuation;
     public ActualDeliveryItemDto Source { get; }
+    public int LineNo { get; set; }
     public ActualProductionRow(ActualDeliveryItemDto source, bool recorded, bool continuation = false)
     {
         Source = source;
@@ -112,6 +113,7 @@ public sealed class DeliveryEditRow : INotifyPropertyChanged
 
 public sealed class ActualSecondaryRow : INotifyPropertyChanged
 {
+    public int LineNo { get; set; }
     private ActualByProductDefinitionDto _definition = null!;
     private ActualByProductSourceDto _source = null!;
     private string _quantity = "";

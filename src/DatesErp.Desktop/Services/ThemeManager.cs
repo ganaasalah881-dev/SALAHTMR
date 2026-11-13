@@ -142,12 +142,8 @@ public static class ThemeManager
             ? new Thickness(Math.Max(1.75, Math.Max(0, visual.BorderThickness) * 1.75))
             : new Thickness(0);
         resources["ThemeCardBorderThickness"] = new Thickness(1);
-        resources["ThemeColumnDividerThickness"] = visual.ShowColumnDividers
-            ? new Thickness(0, 0, Math.Max(.65, Math.Max(0, visual.BorderThickness) * .65), Math.Max(.65, Math.Max(0, visual.BorderThickness) * .65))
-            : new Thickness(0);
-        resources["ThemeGridLinesVisibility"] = visual.ShowColumnDividers
-            ? System.Windows.Controls.DataGridGridLinesVisibility.All
-            : System.Windows.Controls.DataGridGridLinesVisibility.Horizontal;
+        resources["ThemeColumnDividerThickness"] = new Thickness(0, 0, 1, 1);
+        resources["ThemeGridLinesVisibility"] = System.Windows.Controls.DataGridGridLinesVisibility.All;
         resources["ThemeCornerRadius"] = new CornerRadius(Math.Max(0, visual.CornerRadius));
         resources["ThemeButtonCornerRadius"] = new CornerRadius(visual.ButtonStyle is "Square" or "Flat" ? 0 : Math.Max(0, visual.CornerRadius));
         var inputPaddingHorizontal = Math.Max(0, visual.Padding);
