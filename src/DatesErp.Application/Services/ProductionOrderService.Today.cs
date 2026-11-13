@@ -89,7 +89,75 @@ public partial class ProductionOrderService
         => BuildProductionSheet(null);
 
     public List<TodayProductionRowDto> GetOrderRows(int orderId)
-        => BuildProductionSheet(null).Rows.Where(r => r.OrderId == orderId).ToList();
+    {
+        try
+        {
+            var sheetRows = BuildProductionSheet(null).Rows.Where(r => r.OrderId == orderId).ToList();
+            if (sheetRows.Count > 0) return sheetRows;
+        }
+        catch
+        {
+            // قد يفشل فحص الصلاحية في ورقة اليوم عند استعراض أمر سابق بصلاحية العرض؛ نكمل القراءة المباشرة للأمر.
+        }
+
+        var order = Db.ProductionOrders.AsNoTracking().Include(o => o.Items).FirstOrDefault(o => o.Id == orderId);
+        if (order == null) return new List<TodayProductionRowDto>();
+
+        var plan = order.SourcePlanId != null ? Db.ProductionPlans.AsNoTracking().FirstOrDefault(p => p.Id == order.SourcePlanId.Value) : null;
+        var pItems = Db.ProductionOrderItems.AsNoTracking().Where(i => i.OrderId == orderId).ToList();
+        var productIds = pItems.Select(i => i.ProductId).Distinct().ToList();
+        var products = Db.Products.AsNoTracking().Where(p => productIds.Contains(p.Id)).ToDictionary(p => p.Id, p => p.ProductNameAr);
+        var customerIds = pItems.Where(i => i.CustomerId != null).Select(i => i.CustomerId!.Value)
+            .Concat(order.CustomerId != null ? new[] { order.CustomerId.Value } : Array.Empty<int>())
+            .Distinct().ToList();
+        var customers = Db.Customers.AsNoTracking().Where(c => customerIds.Contains(c.Id)).ToDictionary(c => c.Id, c => c.CustomerName);
+        var lotIds = pItems.Where(i => i.LotId != null).Select(i => i.LotId!.Value).Distinct().ToList();
+        var lots = Db.Lots.AsNoTracking().Where(l => lotIds.Contains(l.Id)).ToDictionary(l => l.Id);
+        var rawIds = lots.Values.Select(l => l.ProductId).Distinct().ToList();
+        var rawNames = Db.Products.AsNoTracking().Where(p => rawIds.Contains(p.Id)).ToDictionary(p => p.Id, p => p.ProductNameAr);
+        var shiftName = order.ShiftId != null ? Db.Shifts.AsNoTracking().Where(s => s.Id == order.ShiftId.Value).Select(s => s.ShiftNameAr).FirstOrDefault() : null;
+        var lineName = order.LineId != null ? Db.ProductionLines.AsNoTracking().Where(l => l.Id == order.LineId.Value).Select(l => l.LineNameAr).FirstOrDefault() : null;
+        var packageIds = pItems.Where(i => i.PackagingTypeId != null).Select(i => i.PackagingTypeId!.Value).Distinct().ToList();
+        var packages = Db.PackagingTypes.AsNoTracking().Where(p => packageIds.Contains(p.Id)).ToDictionary(p => p.Id, p => p.PackageNameAr);
+
+        return pItems.Select(it =>
+        {
+            var custId = it.CustomerId ?? order.CustomerId;
+            string custName = custId != null && customers.TryGetValue(custId.Value, out var cn) ? cn : "—";
+            string prodName = products.GetValueOrDefault(it.ProductId, $"صنف #{it.ProductId}");
+            string lotCode = it.LotId != null && lots.TryGetValue(it.LotId.Value, out var lot) ? lot.LotCode : "—";
+            string rawName = it.LotId != null && lots.TryGetValue(it.LotId.Value, out var l2) && rawNames.TryGetValue(l2.ProductId, out var rn) ? rn : "—";
+            string packName = it.PackagingTypeId != null && packages.TryGetValue(it.PackagingTypeId.Value, out var pn) ? pn : "—";
+
+            return new TodayProductionRowDto
+            {
+                OrderId = order.Id,
+                OrderNumber = order.DocumentNumber,
+                PlanId = order.SourcePlanId ?? 0,
+                PlanItemId = it.PlanItemId ?? 0,
+                PlanNumber = plan?.DocumentNumber ?? "—",
+                PlanTitle = plan?.PlanTitle ?? "—",
+                CustomerId = custId,
+                CustomerName = custName,
+                ProductId = it.ProductId,
+                ProductName = prodName,
+                RawName = rawName,
+                LotCode = lotCode,
+                PackName = packName,
+                PlannedCartons = it.PlannedCartons,
+                PlannedKg = it.PlannedQtyKg,
+                Unit = "كرتون",
+                ShiftId = order.ShiftId,
+                ShiftName = shiftName ?? "—",
+                LineId = order.LineId,
+                LineName = lineName ?? "—",
+                ScheduledDate = order.ProductionDate?.ToString("yyyy-MM-dd") ?? "—",
+                Status = DocStatuses.ToArabic(order.Status),
+                IsPending = order.Status == DocStatuses.Draft,
+                DayClosed = order.Status == DocStatuses.Closed
+            };
+        }).ToList();
+    }
 
     private TodayProductionDto BuildProductionSheet(DateTime? onlyDay)
     {

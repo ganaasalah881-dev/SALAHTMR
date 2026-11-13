@@ -617,32 +617,46 @@ public class InspectionService : ServiceBase, IInspectionService
             .Where(e => e.IsDayClosed)
             .OrderByDescending(e => e.Id)
             .ToList();
+
+        var existingChecks = new List<QualityCheck>();
+        try
+        {
+            existingChecks = Db.QualityChecks.AsNoTracking()
+                .Where(c => c.Status != DocStatuses.Cancelled)
+                .ToList();
+        }
+        catch
+        {
+            // SchemaMigrator سيضيف الجدول في التشغيل التالي؛ لا نسقط شاشة الجودة في هذه الأثناء.
+        }
+        var checkExecutionIds = existingChecks.Where(c => c.ExecutionId != null).Select(c => c.ExecutionId!.Value).ToHashSet();
+
+        // نأخذ الإقفال المرتبط بالجودة (أو الذي له محضر فحص بالفعل)؛ وإذا لم يوجد نأخذ أحدث إقفال
         var executions = executionRows
             .GroupBy(e => e.OrderId)
-            .Select(g => g.First()) // أحدث إقفال فقط، فلا نرجع لإقفال أقدم لمسار آخر
-            .Where(e => e.WarehouseRoute != ProductionWarehouseRoutes.Direct)
+            .Select(g => g.FirstOrDefault(e => e.WarehouseRoute != ProductionWarehouseRoutes.Direct || checkExecutionIds.Contains(e.Id)) ?? g.First())
+            .Where(e => e.WarehouseRoute != ProductionWarehouseRoutes.Direct || checkExecutionIds.Contains(e.Id))
             .ToDictionary(e => e.OrderId);
         var orderIds = executions.Keys.ToList();
-        if (orderIds.Count == 0) return new List<QualitySourceDto>();
 
-        var orders = Db.ProductionOrders.AsNoTracking().Include(o => o.Items)
-            .Where(o => orderIds.Contains(o.Id) && o.Status != DocStatuses.Cancelled)
-            .ToList();
+        var orders = orderIds.Count > 0
+            ? Db.ProductionOrders.AsNoTracking().Include(o => o.Items)
+                .Where(o => orderIds.Contains(o.Id) && o.Status != DocStatuses.Cancelled)
+                .ToList()
+            : new List<ProductionOrder>();
         var executionIds = executions.Values.Select(e => e.Id).ToList();
-        // قاعدة البيانات القديمة قد لا تحتوي جدول الفحوصات بعد. غياب الجدول
-        // لا يجب أن يمنع فتح شاشة الجودة؛ عندها تظهر التسليمات كـ«بلا فحص»
-        // ويستطيع المستخدم إكمال الترحيل/التعريف ثم الحفظ.
+
         var checks = new Dictionary<int, QualityCheck>();
         try
         {
-            checks = Db.QualityChecks.AsNoTracking()
-                .Where(c => c.ExecutionId != null && executionIds.Contains(c.ExecutionId.Value)
-                    && c.Status != DocStatuses.Cancelled)
-                .ToList()
+            checks = existingChecks
+                .Where(c => c.ExecutionId != null && executionIds.Contains(c.ExecutionId.Value))
                 .GroupBy(c => c.ExecutionId!.Value)
                 .ToDictionary(g => g.Key, g => g.OrderByDescending(c => c.Id).First());
         }
         catch
+        {
+        }
         {
             // SchemaMigrator سيضيف الجدول في التشغيل التالي؛ لا نسقط شاشة الجودة في هذه الأثناء.
         }
@@ -852,6 +866,16 @@ public class InspectionService : ServiceBase, IInspectionService
                             string prodName = hProducts.GetValueOrDefault(it.ProductId, $"صنف #{it.ProductId}");
                             string lotCode = it.LotId != null && hLots.TryGetValue(it.LotId.Value, out var lc) ? lc : "—";
                             int cartons = (int)(it.CheckedCartons > 0 ? it.CheckedCartons : it.AcceptedCartons + it.RejectedCartons);
+                            if (cartons == 0)
+                            {
+                                try
+                                {
+                                    cartons = (int)Db.InspectionResults.AsNoTracking()
+                                        .Where(r => r.CheckId == chk.Id && r.ProductId == it.ProductId && (it.LotId == null || r.LotId == it.LotId))
+                                        .Sum(r => (double)r.Qty);
+                                }
+                                catch { }
+                            }
                             var grades = gradesByProduct.TryGetValue(it.ProductId, out var pg) ? pg.ToList() : new List<AllowedResultType>();
                             if (legacyGradesByCheckItem.TryGetValue((chk.Id, it.ProductId), out var hGrades))
                                 grades.AddRange(hGrades.Where(h => grades.All(g => g.ResultTypeId != h.ResultTypeId)));

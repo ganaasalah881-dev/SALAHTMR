@@ -362,6 +362,37 @@ public partial class OrdersView : UserControl
         };
         _shownOrderId = id;
         DetailsHint.Visibility = Visibility.Collapsed;
+
+        try
+        {
+            using var scope = AppContainer.NewScope();
+            var svc = scope.ServiceProvider.GetRequiredService<IProductionOrderService>();
+            var rows = svc.GetOrderRows(id);
+            if (rows != null && rows.Count > 0)
+            {
+                _syncing = true;
+                TodayGrid.ItemsSource = rows;
+                TodayGrid.SelectedItem = rows.FirstOrDefault();
+                _syncing = false;
+                GridEmptyHint.Visibility = Visibility.Collapsed;
+
+                var first = rows[0];
+                DayHint.Text = $"أمر الإنتاج المحفوظ: {first.OrderNumber} — {rows.Count} بنود — {rows.Sum(r => r.PlannedCartons):N0} كرتون.";
+                DayChip.Text = $"📅 التاريخ: {first.ScheduledDate}";
+                ItemsChip.Text = $"📦 البنود: {rows.Count}";
+                IssuedChip.Text = $"🗂 الأمر: {first.OrderNumber}";
+                PendingChip.Text = $"✔ {first.Status}";
+                TotCartonsBox.Text = $"الكراتين: {rows.Sum(r => r.PlannedCartons):N0}";
+                TotQtyBox.Text = $"الوزن: {rows.Sum(r => r.PlannedKg):N1} كجم";
+                TotCustsBox.Text = $"عملاء: {rows.Select(r => r.CustomerId).Distinct().Count()}";
+                TotLinesBox.Text = $"الخطوط: {rows.Select(r => r.LineId).Distinct().Count()}";
+            }
+        }
+        catch
+        {
+            // إظهار المستند في اللوحة السفلية يكفي إن تعذر جلب بنود الجدول العلوي
+        }
+
         WorkflowStateText.Text = _selectedGroup == null
             ? "الخطوة الحالية: استعراض أمر محفوظ من البحث."
             : "الخطوة الحالية: الأمر محفوظ؛ بيانات الخطة والعملاء محفوظة معه.";

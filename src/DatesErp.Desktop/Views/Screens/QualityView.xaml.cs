@@ -173,8 +173,8 @@ public partial class QualityView : UserControl
             }
             else
             {
-                SourceBox.ItemsSource = Array.Empty<QualitySourceDto>();
-                SourceBox.SelectedIndex = -1;
+                SourceBox.ItemsSource = _sources;
+                SourceBox.SelectedIndex = _sources.Count > 0 ? 0 : -1;
             }
 
             _loading = false;
@@ -313,9 +313,8 @@ public partial class QualityView : UserControl
                 SourceBox.ItemsSource = _sources;
                 var selected = matches[index - 1];
                 SourceBox.SelectedItem = selected;
-                if (!ReferenceEquals(_current, selected))
-                    Source_Changed(SourceBox, new SelectionChangedEventArgs(ComboBox.SelectionChangedEvent,
-                        new List<object>(), new List<object> { selected }));
+                Source_Changed(SourceBox, new SelectionChangedEventArgs(ComboBox.SelectionChangedEvent,
+                    new List<object>(), new List<object> { selected }));
                 SourceSearchBox.Text = initialTerm ?? "";
             }
             else if (matches.Count == 0)
